@@ -26,9 +26,9 @@ class App(QWidget):
 
         self.game = Game((4, 8), (self.display_width, self.display_height))
         self.drawer = Drawer()
-        self.player = Player()
 
         self.interrupt_to_detect_open_hands_counter = 0
+        self.structure_is_created = False
 
         self.thread = VideoThread("https://192.168.1.155:8080/video", self.display_width, self.display_height)
         self.thread.change_pixmap_signal.connect(self.update_image)
@@ -38,16 +38,19 @@ class App(QWidget):
     def update_image(self, cv_img):
 
         if self.game.is_playing:
-            self.player.detect_gesture()
-            if self.player.visible and self.player.hand_status == 0:
+            self.game.detect_gesture()
+            if self.game.player_is_visible and self.game.get_player_hand_status() == 0:
                 #handle_game_logic here
-
-            elif self.player.visible and self.player.hand_status == 1:
+                pass
+            elif self.game.player_is_visible and self.game.get_player_hand_status() == 1:
                 self.game.is_playing = False
         else:
+            if not self.structure_is_created:
+                self.game.draw_game_structure()
+                self.structure_is_created = True
             self.interrupt_to_detect_open_hands_counter = (self.interrupt_to_detect_open_hands_counter + 1) % 50
             if self.interrupt_to_detect_open_hands_counter == 0:
-                self.player.detect_gesture()
+                self.game.detect_gesture()
                 self.game.is_playing = True
 
 
