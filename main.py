@@ -4,6 +4,7 @@ import numpy as np
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QWidget, QApplication, QLabel, QVBoxLayout
 
+from Entity.Game import Game
 from Thread.VideoThread import VideoThread
 from Utils.Utility import convert_cv_qt
 
@@ -21,6 +22,8 @@ class App(QWidget):
         vbox.addWidget(self.image_label)
         self.setLayout(vbox)
         self.structure_is_created = False
+
+        self.game = Game()
 
         self.thread = VideoThread("https://192.168.1.155:8080/video", self.display_width, self.display_height)
         self.thread.change_pixmap_signal.connect(self.update_image)
