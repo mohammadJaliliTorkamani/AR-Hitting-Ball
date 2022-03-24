@@ -7,15 +7,17 @@ class Game:
         (self.display_width, self.display_height) = display_size
         self.board = Board(blocks_size)
         self.player = Player()
-        self.player_is_visible = False
         self.is_playing = False
 
     def draw_game_structure(self):
         pass
 
     def detect_gesture(self):
-        pass
+        self.player.visible = True
+        self.player.hand_status = 1
 
     def get_player_hand_status(self):
-        pass
+        return self.player.hand_status
 
+    def player_is_visible(self):
+        return self.player.is_visible

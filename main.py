@@ -39,16 +39,18 @@ class App(QWidget):
 
         if self.game.is_playing:
             self.game.detect_gesture()
-            if self.game.player_is_visible and self.game.get_player_hand_status() == 0:
-                #handle_game_logic here
+            if self.game.player_is_visible() and self.game.get_player_hand_status() == 0:
+                #handle_game logic here
                 pass
-            elif self.game.player_is_visible and self.game.get_player_hand_status() == 1:
+            elif self.game.player_is_visible() and self.game.get_player_hand_status() == 1:
                 self.game.is_playing = False
         else:
             if not self.structure_is_created:
                 self.game.draw_game_structure()
                 self.structure_is_created = True
+
             self.interrupt_to_detect_open_hands_counter = (self.interrupt_to_detect_open_hands_counter + 1) % 50
+            print(self.interrupt_to_detect_open_hands_counter)
             if self.interrupt_to_detect_open_hands_counter == 0:
                 self.game.detect_gesture()
                 self.game.is_playing = True
