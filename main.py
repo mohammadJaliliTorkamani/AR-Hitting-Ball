@@ -23,7 +23,7 @@ class App(QWidget):
         self.setLayout(vbox)
         self.structure_is_created = False
 
-        self.game = Game()
+        self.game = Game((4, 8), (self.display_width, self.display_height))
 
         self.thread = VideoThread("https://192.168.1.155:8080/video", self.display_width, self.display_height)
         self.thread.change_pixmap_signal.connect(self.update_image)
@@ -31,10 +31,6 @@ class App(QWidget):
 
     @pyqtSlot(np.ndarray)
     def update_image(self, cv_img):
-
-
-
-
         self.show_cv_img_in_frame(cv_img)
 
     def show_cv_img_in_frame(self, cv_img):
