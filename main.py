@@ -28,6 +28,10 @@ class App(QWidget):
 
     @pyqtSlot(np.ndarray)
     def update_image(self, cv_img):
+
+
+
+
         self.show_cv_img_in_frame(cv_img)
 
     def show_cv_img_in_frame(self, cv_img):
