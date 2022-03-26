@@ -5,7 +5,6 @@ from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QWidget, QApplication, QLabel, QVBoxLayout
 
 from Entity.Game import Game
-from Entity.Player import Player
 from Thread.VideoThread import VideoThread
 from Utils.Drawer import Drawer
 from Utils.Utility import convert_cv_qt
@@ -30,31 +29,32 @@ class App(QWidget):
         self.interrupt_to_detect_open_hands_counter = 0
         self.structure_is_created = False
 
-        self.thread = VideoThread("https://192.168.1.155:8080/video", self.display_width, self.display_height)
+        self.thread = VideoThread("https://21.222.37.110:8080/video", self.display_width, self.display_height)
         self.thread.change_pixmap_signal.connect(self.update_image)
         self.thread.start()
 
     @pyqtSlot(np.ndarray)
     def update_image(self, cv_img):
-
         if self.game.is_playing:
-            self.game.detect_gesture()
-            if self.game.player_is_visible() and self.game.get_player_hand_status() == 0:
-                #handle_game logic here
-                pass
-            elif self.game.player_is_visible() and self.game.get_player_hand_status() == 1:
-                self.game.is_playing = False
-        else:
             if not self.structure_is_created:
                 self.game.draw_game_structure()
                 self.structure_is_created = True
 
-            self.interrupt_to_detect_open_hands_counter = (self.interrupt_to_detect_open_hands_counter + 1) % 50
-            print(self.interrupt_to_detect_open_hands_counter)
-            if self.interrupt_to_detect_open_hands_counter == 0:
-                self.game.detect_gesture()
-                self.game.is_playing = True
-
+            self.game.detect_gesture(cv_img)
+            if self.game.player_is_visible() and self.game.get_player_hand_status() == 0:
+                # handle_game logic here
+                pass
+            elif self.game.player_is_visible() and self.game.get_player_hand_status() == 1:
+                self.game.is_playing = False
+        else:
+            self.interrupt_to_detect_open_hands_counter = self.interrupt_to_detect_open_hands_counter + 1
+            if self.interrupt_to_detect_open_hands_counter >= 40:
+                if self.interrupt_to_detect_open_hands_counter == 70:
+                    self.interrupt_to_detect_open_hands_counter = 0
+                else:
+                    self.game.detect_gesture(cv_img)
+                    if self.game.player_is_visible() and self.game.get_player_hand_status() == 1:
+                        self.game.is_playing = True
 
         self.show_cv_img_in_frame(cv_img)
 
