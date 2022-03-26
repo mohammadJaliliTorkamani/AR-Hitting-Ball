@@ -23,8 +23,8 @@ class App(QWidget):
         vbox.addWidget(self.image_label)
         self.setLayout(vbox)
 
-        self.game = Game((4, 8), (self.display_width, self.display_height))
         self.drawer = Drawer()
+        self.game = Game((8, 4), (self.display_width, self.display_height),self.drawer)
 
         self.interrupt_to_detect_hand_counter = 0
         self.structure_is_created = False
@@ -47,7 +47,7 @@ class App(QWidget):
             self.drawer.draw(self.game.player.position,0)
 
         self.show_cv_img_in_frame(cv_img)
-        self.drawer.clear(self.game.player.position)
+        self.drawer.clear(self.game.player.position,0)
 
     def show_cv_img_in_frame(self, cv_img):
         self.drawer.blend(cv_img)

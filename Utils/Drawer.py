@@ -7,7 +7,14 @@ class Drawer:
         self.output = None
 
     def draw(self, position, mode):  # modes: Player's Surface : 0 , Ball : 1, Block : 2
-        self._mask[position] = mode
+        if mode == 0:
+            for i in range(70):
+                self._mask[(position[0] + i, 800)] = mode
+
+        if mode == 2:
+            for i in range(30):
+                self._mask[(position[0] + i, position[1])] = mode
+
         return self
 
     def blend(self, cv_img):
@@ -18,6 +25,12 @@ class Drawer:
             end_pos = (point[0] + 5, point[1] + 5)
             cv2.rectangle(self.output, start_pos, end_pos, color, cv2.FILLED)
 
-    def clear(self, pos):
-        if pos in self._mask:
-            del self._mask[pos]
+    def clear(self, pos, mode):
+        if mode == 0:
+            for i in range(70):
+                position = (pos[0] + i, 800)
+                if position in self._mask:
+                    del self._mask[position]
+        else:
+            if pos in self._mask:
+                del self._mask[pos]

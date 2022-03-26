@@ -21,6 +21,6 @@ class HandDetector:
                     cx, cy = int(lm.x * w), int(lm.y * h)
                     points_status[id] = (cx, cy)
 
-        if 8 in points_status:
-            return True, points_status[8]
+        if 0 in points_status:
+            return True, points_status[0]
         return False, (-1, -1)
