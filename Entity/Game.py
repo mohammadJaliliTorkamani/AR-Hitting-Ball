@@ -12,17 +12,10 @@ class Game:
         self.is_playing = False
 
     def draw_game_structure(self):
-        print("Drawn!!")
+        print("Drawing game structure!!")
         pass
 
     def detect_gesture(self, cv_img):
-        visibility, hand_position, hand_status = self.detector.detect_gesture(cv_img)
-        self.player.visible = visibility
-        self.player.hand_status = hand_status
+        visibility, hand_position = self.detector.detect_gesture(cv_img)
+        self.player.is_visible = visibility
         self.player.position = hand_position
-
-    def get_player_hand_status(self):
-        return self.player.hand_status
-
-    def player_is_visible(self):
-        return self.player.is_visible

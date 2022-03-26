@@ -26,37 +26,28 @@ class App(QWidget):
         self.game = Game((4, 8), (self.display_width, self.display_height))
         self.drawer = Drawer()
 
-        self.interrupt_to_detect_open_hands_counter = 0
+        self.interrupt_to_detect_hand_counter = 0
         self.structure_is_created = False
 
-        self.thread = VideoThread("https://21.222.37.110:8080/video", self.display_width, self.display_height)
+        self.thread = VideoThread("https://192.168.1.155:8080/video", self.display_width, self.display_height)
         self.thread.change_pixmap_signal.connect(self.update_image)
         self.thread.start()
 
     @pyqtSlot(np.ndarray)
     def update_image(self, cv_img):
-        if self.game.is_playing:
-            if not self.structure_is_created:
-                self.game.draw_game_structure()
-                self.structure_is_created = True
+        if not self.structure_is_created:
+            self.game.draw_game_structure()
+            self.structure_is_created = True
 
+        self.interrupt_to_detect_hand_counter = ( self.interrupt_to_detect_hand_counter + 1 ) % 3
+        if self.interrupt_to_detect_hand_counter == 0:
             self.game.detect_gesture(cv_img)
-            if self.game.player_is_visible() and self.game.get_player_hand_status() == 0:
-                # handle_game logic here
-                pass
-            elif self.game.player_is_visible() and self.game.get_player_hand_status() == 1:
-                self.game.is_playing = False
-        else:
-            self.interrupt_to_detect_open_hands_counter = self.interrupt_to_detect_open_hands_counter + 1
-            if self.interrupt_to_detect_open_hands_counter >= 40:
-                if self.interrupt_to_detect_open_hands_counter == 70:
-                    self.interrupt_to_detect_open_hands_counter = 0
-                else:
-                    self.game.detect_gesture(cv_img)
-                    if self.game.player_is_visible() and self.game.get_player_hand_status() == 1:
-                        self.game.is_playing = True
+
+        if self.game.player.is_visible:
+            self.drawer.draw(self.game.player.position,0)
 
         self.show_cv_img_in_frame(cv_img)
+        self.drawer.clear(self.game.player.position)
 
     def show_cv_img_in_frame(self, cv_img):
         self.drawer.blend(cv_img)
