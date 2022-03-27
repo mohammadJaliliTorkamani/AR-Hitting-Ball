@@ -42,10 +42,10 @@ class App(QWidget):
 
         self.interrupt_to_detect_hand_counter = (self.interrupt_to_detect_hand_counter + 1) % 3
         if self.interrupt_to_detect_hand_counter == 0:
-            self.game.detector.detect_gesture(cv_img)
+            self.game.detect_gesture(cv_img)
             if self.game.player.is_visible:
-                self.drawer.clear(self.game.player.last_position, 0)
-                self.drawer.draw(self.game.player.current_position, 0)
+                self.game.clear_last_surface()
+                self.game.redraw_surface()
 
         self.play_in_step()
         self.show_cv_img_in_frame(cv_img)
