@@ -5,6 +5,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 
 class VideoThread(QThread):
     change_pixmap_signal = pyqtSignal(np.ndarray)
+    hand_detection_signal = pyqtSignal(np.ndarray)
 
     def __init__(self, camera_port, display_width, display_height):
         super(VideoThread, self).__init__()
