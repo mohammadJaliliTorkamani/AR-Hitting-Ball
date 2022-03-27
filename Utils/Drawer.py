@@ -11,9 +11,11 @@ class Drawer:
             for i in range(70):
                 self._mask[(position[0] + i, 800)] = mode
 
-        if mode == 2:
+        elif mode == 2:
             for i in range(30):
                 self._mask[(position[0] + i, position[1])] = mode
+        elif mode == 1:
+            self._mask[position] = mode
 
         return self
 

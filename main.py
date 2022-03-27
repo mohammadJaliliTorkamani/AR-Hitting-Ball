@@ -1,7 +1,7 @@
 import sys
 
 import numpy as np
-from PyQt5.QtCore import pyqtSlot, pyqtSignal
+from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QWidget, QApplication, QLabel, QVBoxLayout
 
 from Entity.Game import Game
@@ -29,19 +29,10 @@ class App(QWidget):
         self.interrupt_to_detect_hand_counter = 0
         self.structure_is_created = False
 
-
         self.thread = VideoThread("https://192.168.1.155:8080/video", self.display_width, self.display_height)
         self.thread.change_pixmap_signal.connect(self.update_image)
         self.thread.hand_detection_signal.connect(self.detect_gesture)
         self.thread.start()
-
-    @pyqtSlot(np.ndarray)
-    def detect_gesture(self, cv_img):
-        self.interrupt_to_detect_hand_counter = ( self.interrupt_to_detect_hand_counter + 1 ) % 5
-        if self.interrupt_to_detect_hand_counter == 0:
-            print(self.game.detector.detect_gesture(cv_img))
-        else:
-            print("No")
 
     @pyqtSlot(np.ndarray)
     def update_image(self, cv_img):
@@ -49,21 +40,51 @@ class App(QWidget):
             self.game.draw_game_structure()
             self.structure_is_created = True
 
-        # self.interrupt_to_detect_hand_counter = (self.interrupt_to_detect_hand_counter + 1) % 3
-        # if self.interrupt_to_detect_hand_counter == 0:
-        #     self.game.detect_gesture(cv_img)
-        #
-        # if self.game.player.is_visible:
-        #     self.drawer.clear(self.game.player.last_position, 0)
-        #     self.drawer.draw(self.game.player.current_position, 0)
-        #
-        # self.game.play_in_step()
+        self.interrupt_to_detect_hand_counter = (self.interrupt_to_detect_hand_counter + 1) % 3
+        if self.interrupt_to_detect_hand_counter == 0:
+            self.game.detector.detect_gesture(cv_img)
+            if self.game.player.is_visible:
+                self.drawer.clear(self.game.player.last_position, 0)
+                self.drawer.draw(self.game.player.current_position, 0)
+
+        self.play_in_step()
         self.show_cv_img_in_frame(cv_img)
 
     def show_cv_img_in_frame(self, cv_img):
         self.drawer.blend(cv_img)
         qt_img = convert_cv_qt(self.drawer.output, self.display_width, self.display_height)
         self.image_label.setPixmap(qt_img)
+
+    def play_in_step(self):
+        if not self.game.game_begun:
+            self.game.ball.position = self.game.player.position
+
+        if self.game.ball.position[0] == self.game.display_width:
+            ##calculate reflex_position and
+            self.drawer.clear(self.game.ball.position, 1)
+            self.drawer.draw(self.game.ball.current_position, 1)
+
+            pass
+        elif self.game.ball.position[0] == 0:
+            ##calculate reflex_position and
+            self.drawer.clear(self.game.ball.position, 1)
+            self.drawer.draw(self.game.ball.current_position, 1)
+            pass
+        elif self.game.ball.position[1] == 0:
+            ##calculate reflex_position and
+            self.drawer.clear(self.game.ball.position, 1)
+            self.drawer.draw(self.game.ball.current_position, 1)
+            pass
+        elif self.game.ball.position[1] == self.game.display_height:
+            print("User lost!")
+            pass
+        elif (self.game.ball.position[0] == self.game.player.current_position[0]) and (
+                self.game.ball.position[1] == self.game.player.current_position[1]):
+            ###REFLECT ON SURFACE
+            pass
+        else:
+            # CALCULATE NEXT POSITION FREELY AND PLACE THE BALL THERE
+            pass
 
 
 if __name__ == "__main__":
