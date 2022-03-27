@@ -29,12 +29,12 @@ class Game:
         if visible:
             self.player.last_position = self.player.current_position
             self.player.current_position = position
-            self.surface.x = position
+            self.surface.x = position[0]
 
     def clear_last_surface(self):
         for i in range(70):
-            self.drawer.clear((self.surface.x + i, self.surface.y))
+            self.drawer.clear((self.player.last_position[0] + i, self.surface.y))
 
-    def redraw_surface(self):
+    def draw_surface(self):
         for i in range(70):
-            self.drawer.draw((self.surface.x + i, 800), self.surface.y)
+            self.drawer.draw((self.surface.x + i, self.surface.y), 0)

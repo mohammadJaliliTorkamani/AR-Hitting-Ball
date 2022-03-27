@@ -31,7 +31,6 @@ class App(QWidget):
 
         self.thread = VideoThread("https://192.168.1.155:8080/video", self.display_width, self.display_height)
         self.thread.change_pixmap_signal.connect(self.update_image)
-        self.thread.hand_detection_signal.connect(self.detect_gesture)
         self.thread.start()
 
     @pyqtSlot(np.ndarray)
@@ -45,9 +44,9 @@ class App(QWidget):
             self.game.detect_gesture(cv_img)
             if self.game.player.is_visible:
                 self.game.clear_last_surface()
-                self.game.redraw_surface()
+                self.game.draw_surface()
 
-        self.play_in_step()
+        # self.play_in_step()
         self.show_cv_img_in_frame(cv_img)
 
     def show_cv_img_in_frame(self, cv_img):
