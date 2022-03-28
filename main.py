@@ -24,7 +24,7 @@ class App(QWidget):
         self.setLayout(vbox)
 
         self.drawer = Drawer()
-        self.game = Game((8, 4), (self.display_width, self.display_height), self.drawer)
+        self.game = Game((4, 9), (self.display_width, self.display_height), self.drawer)
 
         self.interrupt_to_detect_hand_counter = 0
         self.structure_is_created = False

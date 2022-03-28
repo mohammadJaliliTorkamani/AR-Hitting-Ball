@@ -17,11 +17,11 @@ class Game:
         self.game_begun = False
 
     def draw_game_structure(self):
-        for i in range(self.blocks_board.size[1]):
-            for j in range(self.blocks_board.size[0]):
+        for i in range(self.blocks_board.size[0]):
+            for j in range(self.blocks_board.size[1]):
                 for k in range(30):
-                    self.drawer.draw((int(j / self.blocks_board.size[0] * self.display_width + 100) + k,
-                                      int(0.3 * i / self.blocks_board.size[1] * self.display_height) + 10), 2)
+                    self.drawer.draw((int((j+1) / (self.blocks_board.size[1]+1) * self.display_width) + k,
+                                      int(0.3 * ((i+1) / (self.blocks_board.size[0]+1)) * self.display_height) + 10), 2)
 
     def detect_gesture(self, cv_img):
         visible, position = self.detector.detect_gesture(cv_img)
