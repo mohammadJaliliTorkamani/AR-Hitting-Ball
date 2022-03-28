@@ -60,18 +60,18 @@ class App(QWidget):
 
         if self.game.ball.position[0] == self.game.display_width:
             ##calculate reflex_position and
-            self.drawer.clear(self.game.ball.position, 1)
+            self.drawer.clear(self.game.ball.position)
             self.drawer.draw(self.game.ball.current_position, 1)
 
             pass
         elif self.game.ball.position[0] == 0:
             ##calculate reflex_position and
-            self.drawer.clear(self.game.ball.position, 1)
+            self.drawer.clear(self.game.ball.position)
             self.drawer.draw(self.game.ball.current_position, 1)
             pass
         elif self.game.ball.position[1] == 0:
             ##calculate reflex_position and
-            self.drawer.clear(self.game.ball.position, 1)
+            self.drawer.clear(self.game.ball.position)
             self.drawer.draw(self.game.ball.current_position, 1)
             pass
         elif self.game.ball.position[1] == self.game.display_height:
