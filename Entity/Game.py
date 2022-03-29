@@ -43,3 +43,9 @@ class Game:
     def draw_surface(self):
         for i in range(self.surface.length):
             self.drawer.draw((self.surface.current_x + i, self.surface.y), 0)
+
+    def clear_last_ball(self):
+        self.drawer.clear(self.ball.last_position)
+
+    def draw_ball(self):
+        self.drawer.draw(self.ball.current_position,1)

@@ -84,11 +84,19 @@ class App(QWidget):
             self.drawer.clear(self.game.ball.last_position)
             self.drawer.draw(self.game.ball.current_position, 1)
             pass
-        elif ((self.game.surface.current_x <= self.game.ball.current_position[0] <= (self.game.surface.current_x + self.game.surface.length))
+        elif ((self.game.surface.current_x <= self.game.ball.current_position[0] <= (
+                self.game.surface.current_x + self.game.surface.length))
               and ((self.game.ball.current_position[1] + 10) == self.game.surface.y)):
-            ###REFLECT ON SURFACE
-            print("4S")
-            pass
+            self.game.ball.last_position = self.game.ball.current_position
+            if self.game.ball.is_moving_right:
+                new_pos_x = (self.game.ball.current_position[0] + 1)
+            else:
+                new_pos_x = (self.game.ball.current_position[0] - 1)
+
+            new_pos_y = self.game.ball.current_position[1] - 1
+            self.game.ball.current_position = (new_pos_x, new_pos_y)
+            self.game.clear_last_ball()
+            self.game.draw_ball()
         else:
             print("5S")
             # CALCULATE NEXT POSITION FREELY AND PLACE THE BALL THERE
