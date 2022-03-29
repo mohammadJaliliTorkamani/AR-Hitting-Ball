@@ -63,23 +63,19 @@ class App(QWidget):
                 self.game.surface.current_x + int(self.game.surface.length / 2), self.game.surface.y - 10)
 
         if self.game.ball.current_position[0] == self.game.display_width:
-            print("1S")
             ##calculate reflex_position and
             self.drawer.clear(self.game.ball.last_position)
             self.drawer.draw(self.game.ball.current_position, 1)
 
             pass
         elif self.game.ball.current_position[0] == 0:
-            print("2S")
             ##calculate reflex_position and
             self.drawer.clear(self.game.ball.last_position)
             self.drawer.draw(self.game.ball.current_position, 1)
             pass
         elif self.game.ball.current_position[1] == self.game.display_height:
-            print("User lost!")
             pass
         elif self.game.ball.current_position[1] == 0:
-            print("3S")
             ##calculate reflex_position and
             self.drawer.clear(self.game.ball.last_position)
             self.drawer.draw(self.game.ball.current_position, 1)
@@ -98,7 +94,6 @@ class App(QWidget):
             self.game.clear_last_ball()
             self.game.draw_ball()
         else:
-            print("5S")
             # CALCULATE NEXT POSITION FREELY AND PLACE THE BALL THERE
             pass
         self.drawer.draw(self.game.ball.current_position, 1)
