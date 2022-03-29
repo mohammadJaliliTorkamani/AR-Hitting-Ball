@@ -22,3 +22,6 @@ class Drawer:
     def clear(self, pos):
         if pos in self._mask:
             del self._mask[pos]
+            return True
+        else:
+            return False

@@ -36,8 +36,8 @@ class App(QWidget):
     @pyqtSlot(np.ndarray)
     def update_image(self, cv_img):
         if not self.structure_is_created:
-            self.game.draw_game_structure()
             self.structure_is_created = True
+            self.game.draw_game_structure()
 
         self.interrupt_to_detect_hand_counter = (self.interrupt_to_detect_hand_counter + 1) % 10
         if self.interrupt_to_detect_hand_counter == 0:
@@ -63,6 +63,20 @@ class App(QWidget):
             self.game.ball.last_position = self.game.ball.current_position
             self.game.ball.current_position = (
                 self.game.surface.current_x + int(self.game.surface.length / 2), self.game.surface.y - 10)
+
+        for block_row in self.game.blocks_board.blocks:
+            for block in block_row:
+                if block.alive:
+                    for k in range(block.length):
+                        block_x = int(block.position[1] / (
+                                self.game.blocks_board.size[1] + 1) * self.game.display_width) + k - int(block.length / 2)
+                        block_y = int(0.4 * (block.position[0] / (
+                                self.game.blocks_board.size[0] + 1)) * self.game.display_height) + 10
+                        if (self.game.ball.current_position[0] == block_x) and (self.game.ball.current_position[1] == block_y):
+                            self.game.ball.is_moving_up = not self.game.ball.is_moving_up
+                            block.alive = False
+                            self.game.remove_block(block_x,block_y)
+                            break
 
         if (self.game.ball.current_position[0] == self.game.display_width) or (self.game.ball.current_position[0] == 0):
             self.game.ball.is_moving_right = not self.game.ball.is_moving_right

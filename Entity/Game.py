@@ -19,9 +19,9 @@ class Game:
     def draw_game_structure(self):
         for block_row in self.blocks_board.blocks:
             for block in block_row:
+                row = block.position[0]
+                col = block.position[1]
                 for k in range(block.length):
-                    row = block.position[0]
-                    col = block.position[1]
                     self.drawer.draw(
                         (int(col / (self.blocks_board.size[1] + 1) * self.display_width) + k - int(block.length / 2),
                          int(0.4 * (row / (self.blocks_board.size[0] + 1)) * self.display_height) + 10), 2)
@@ -48,4 +48,8 @@ class Game:
         self.drawer.clear(self.ball.last_position)
 
     def draw_ball(self):
-        self.drawer.draw(self.ball.current_position,1)
+        self.drawer.draw(self.ball.current_position, 1)
+
+    def remove_block(self, block_x, block_y):
+        print("REMOVING")
+        self.drawer.clear((block_x, block_y))
