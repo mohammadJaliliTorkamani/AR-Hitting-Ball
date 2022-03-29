@@ -46,7 +46,8 @@ class App(QWidget):
                 self.game.clear_last_surface()
                 self.game.draw_surface()
 
-        # self.play_in_step()
+        if self.game.surface.current_x is not None:  # is True for the first detection
+            self.play_in_step()
         self.show_cv_img_in_frame(cv_img)
 
     def show_cv_img_in_frame(self, cv_img):
@@ -55,8 +56,11 @@ class App(QWidget):
         self.image_label.setPixmap(qt_img)
 
     def play_in_step(self):
+        self.game.ball.last_position = self.game.ball.current_position
         if not self.game.game_begun:
-            self.game.ball.current_position = self.game.player.position
+            self.game.game_begun = True
+            self.game.ball.current_position = (
+                self.game.surface.current_x + int(self.game.surface.length / 2), self.game.surface.y - 10)
 
         # if self.game.ball.position[0] == self.game.display_width:
         #     ##calculate reflex_position and
@@ -84,7 +88,7 @@ class App(QWidget):
         # else:
         #     # CALCULATE NEXT POSITION FREELY AND PLACE THE BALL THERE
         #     pass
-
+        self.drawer.draw(self.game.ball.current_position, 1)
 
 
 if __name__ == "__main__":
