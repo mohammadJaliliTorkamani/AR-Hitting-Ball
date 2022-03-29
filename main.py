@@ -39,7 +39,7 @@ class App(QWidget):
             self.game.draw_game_structure()
             self.structure_is_created = True
 
-        self.interrupt_to_detect_hand_counter = (self.interrupt_to_detect_hand_counter + 1) % 3
+        self.interrupt_to_detect_hand_counter = (self.interrupt_to_detect_hand_counter + 1) % 10
         if self.interrupt_to_detect_hand_counter == 0:
             self.game.detect_gesture(cv_img)
             if self.game.player.is_visible:
@@ -56,47 +56,41 @@ class App(QWidget):
         self.image_label.setPixmap(qt_img)
 
     def play_in_step(self):
+        self.game.ball.last_position = self.game.ball.current_position
+
         if not self.game.game_begun:
             self.game.game_begun = True
             self.game.ball.last_position = self.game.ball.current_position
             self.game.ball.current_position = (
                 self.game.surface.current_x + int(self.game.surface.length / 2), self.game.surface.y - 10)
 
-        if self.game.ball.current_position[0] == self.game.display_width:
-            ##calculate reflex_position and
-            self.drawer.clear(self.game.ball.last_position)
-            self.drawer.draw(self.game.ball.current_position, 1)
+        if (self.game.ball.current_position[0] == self.game.display_width) or (self.game.ball.current_position[0] == 0):
+            self.game.ball.is_moving_right = not self.game.ball.is_moving_right
 
-            pass
-        elif self.game.ball.current_position[0] == 0:
-            ##calculate reflex_position and
-            self.drawer.clear(self.game.ball.last_position)
-            self.drawer.draw(self.game.ball.current_position, 1)
-            pass
-        elif self.game.ball.current_position[1] == self.game.display_height:
-            pass
         elif self.game.ball.current_position[1] == 0:
-            ##calculate reflex_position and
-            self.drawer.clear(self.game.ball.last_position)
-            self.drawer.draw(self.game.ball.current_position, 1)
+            self.game.ball.is_moving_up = False
+
+        elif self.game.ball.current_position[1] == self.game.display_height:
+            print("You lose!")
             pass
         elif ((self.game.surface.current_x <= self.game.ball.current_position[0] <= (
                 self.game.surface.current_x + self.game.surface.length))
               and ((self.game.ball.current_position[1] + 10) == self.game.surface.y)):
-            self.game.ball.last_position = self.game.ball.current_position
-            if self.game.ball.is_moving_right:
-                new_pos_x = (self.game.ball.current_position[0] + 1)
-            else:
-                new_pos_x = (self.game.ball.current_position[0] - 1)
+            self.game.ball.is_moving_up = True
 
-            new_pos_y = self.game.ball.current_position[1] - 1
-            self.game.ball.current_position = (new_pos_x, new_pos_y)
-            self.game.clear_last_ball()
-            self.game.draw_ball()
+        if self.game.ball.is_moving_right:
+            new_pos_x = (self.game.ball.current_position[0] + 1)
         else:
-            # CALCULATE NEXT POSITION FREELY AND PLACE THE BALL THERE
-            pass
-        self.drawer.draw(self.game.ball.current_position, 1)
+            new_pos_x = (self.game.ball.current_position[0] - 1)
+
+        if self.game.ball.is_moving_up:
+            new_pos_y = (self.game.ball.current_position[1] - 1)
+        else:
+            new_pos_y = (self.game.ball.current_position[1] + 1)
+
+        self.game.ball.current_position = (new_pos_x, new_pos_y)
+        self.game.clear_last_ball()
+        self.game.draw_ball()
 
 
 if __name__ == "__main__":
