@@ -25,16 +25,17 @@ class Game:
 
     def detect_gesture(self, cv_img):
         visible, position = self.detector.detect_gesture(cv_img)
+        print(position)
         self.player.is_visible = visible
-        if visible:
+        if visible and (position[0] + self.surface.length <= self.display_width) and (position[0] >= 0):
             self.player.last_position = self.player.current_position
             self.player.current_position = position
             self.surface.x = position[0]
 
     def clear_last_surface(self):
-        for i in range(70):
+        for i in range(self.surface.length):
             self.drawer.clear((self.player.last_position[0] + i, self.surface.y))
 
     def draw_surface(self):
-        for i in range(70):
+        for i in range(self.surface.length):
             self.drawer.draw((self.surface.x + i, self.surface.y), 0)

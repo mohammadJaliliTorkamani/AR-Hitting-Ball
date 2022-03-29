@@ -56,34 +56,35 @@ class App(QWidget):
 
     def play_in_step(self):
         if not self.game.game_begun:
-            self.game.ball.position = self.game.player.position
+            self.game.ball.current_position = self.game.player.position
 
-        if self.game.ball.position[0] == self.game.display_width:
-            ##calculate reflex_position and
-            self.drawer.clear(self.game.ball.position)
-            self.drawer.draw(self.game.ball.current_position, 1)
+        # if self.game.ball.position[0] == self.game.display_width:
+        #     ##calculate reflex_position and
+        #     self.drawer.clear(self.game.ball.last_position)
+        #     self.drawer.draw(self.game.ball.current_position, 1)
+        #
+        #     pass
+        # elif self.game.ball.position[0] == 0:
+        #     ##calculate reflex_position and
+        #     self.drawer.clear(self.game.ball.position)
+        #     self.drawer.draw(self.game.ball.current_position, 1)
+        #     pass
+        # elif self.game.ball.position[1] == 0:
+        #     ##calculate reflex_position and
+        #     self.drawer.clear(self.game.ball.position)
+        #     self.drawer.draw(self.game.ball.current_position, 1)
+        #     pass
+        # elif self.game.ball.position[1] == self.game.display_height:
+        #     print("User lost!")
+        #     pass
+        # elif (self.game.ball.position[0] == self.game.player.current_position[0]) and (
+        #         self.game.ball.position[1] == self.game.player.current_position[1]):
+        #     ###REFLECT ON SURFACE
+        #     pass
+        # else:
+        #     # CALCULATE NEXT POSITION FREELY AND PLACE THE BALL THERE
+        #     pass
 
-            pass
-        elif self.game.ball.position[0] == 0:
-            ##calculate reflex_position and
-            self.drawer.clear(self.game.ball.position)
-            self.drawer.draw(self.game.ball.current_position, 1)
-            pass
-        elif self.game.ball.position[1] == 0:
-            ##calculate reflex_position and
-            self.drawer.clear(self.game.ball.position)
-            self.drawer.draw(self.game.ball.current_position, 1)
-            pass
-        elif self.game.ball.position[1] == self.game.display_height:
-            print("User lost!")
-            pass
-        elif (self.game.ball.position[0] == self.game.player.current_position[0]) and (
-                self.game.ball.position[1] == self.game.player.current_position[1]):
-            ###REFLECT ON SURFACE
-            pass
-        else:
-            # CALCULATE NEXT POSITION FREELY AND PLACE THE BALL THERE
-            pass
 
 
 if __name__ == "__main__":
