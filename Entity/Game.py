@@ -50,6 +50,10 @@ class Game:
     def draw_ball(self):
         self.drawer.draw(self.ball.current_position, 1)
 
-    def remove_block(self, block_x, block_y):
-        print("REMOVING")
-        self.drawer.clear((block_x, block_y))
+    def remove_block(self, block_length,block_position):
+        for k in range(block_length):
+            block_x = int(block_position[1] / (
+                    self.blocks_board.size[1] + 1) * self.display_width) + k - int(block_length / 2)
+            block_y = int(0.4 * (block_position[0] / (
+                    self.blocks_board.size[0] + 1)) * self.display_height) + 10
+            self.drawer.clear((block_x, block_y))

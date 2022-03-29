@@ -75,8 +75,7 @@ class App(QWidget):
                         if (self.game.ball.current_position[0] == block_x) and (self.game.ball.current_position[1] == block_y):
                             self.game.ball.is_moving_up = not self.game.ball.is_moving_up
                             block.alive = False
-                            self.game.remove_block(block_x,block_y)
-                            break
+                            self.game.remove_block(block.length,block.position)
 
         if (self.game.ball.current_position[0] == self.game.display_width) or (self.game.ball.current_position[0] == 0):
             self.game.ball.is_moving_right = not self.game.ball.is_moving_right
