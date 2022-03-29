@@ -17,25 +17,28 @@ class Game:
         self.game_begun = False
 
     def draw_game_structure(self):
-        for i in range(self.blocks_board.size[0]):
-            for j in range(self.blocks_board.size[1]):
-                for k in range(30):
-                    self.drawer.draw((int((j+1) / (self.blocks_board.size[1]+1) * self.display_width) + k,
-                                      int(0.3 * ((i+1) / (self.blocks_board.size[0]+1)) * self.display_height) + 10), 2)
+        for block_row in self.blocks_board.blocks:
+            for block in block_row:
+                for k in range(block.length):
+                    row = block.position[0]
+                    col = block.position[1]
+                    self.drawer.draw(
+                        (int(col / (self.blocks_board.size[1] + 1) * self.display_width) + k - int(block.length / 2),
+                         int(0.4 * (row / (self.blocks_board.size[0] + 1)) * self.display_height) + 10), 2)
 
     def detect_gesture(self, cv_img):
         visible, position = self.detector.detect_gesture(cv_img)
-        print(position)
         self.player.is_visible = visible
         if visible and (position[0] + self.surface.length <= self.display_width) and (position[0] >= 0):
             self.player.last_position = self.player.current_position
             self.player.current_position = position
-            self.surface.x = position[0]
+            self.surface.last_x = self.surface.current_x
+            self.surface.current_x = position[0]
 
     def clear_last_surface(self):
         for i in range(self.surface.length):
-            self.drawer.clear((self.player.last_position[0] + i, self.surface.y))
+            self.drawer.clear((self.surface.last_x + i, self.surface.y))
 
     def draw_surface(self):
         for i in range(self.surface.length):
-            self.drawer.draw((self.surface.x + i, self.surface.y), 0)
+            self.drawer.draw((self.surface.current_x + i, self.surface.y), 0)
