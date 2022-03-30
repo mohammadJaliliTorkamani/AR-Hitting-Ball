@@ -72,15 +72,11 @@ class Game:
         for block_row in self.blocks_board.blocks:
             for block in block_row:
                 if block.alive:
-                    for k in range(block.length):
-                        block_x = int(block.position[1] / (
-                                self.blocks_board.size[1] + 1) * self.display_width) + k - int(block.length / 2)
-                        block_y = int(0.4 * (block.position[0] / (
-                                self.blocks_board.size[0] + 1)) * self.display_height) + 10
-                        if (self.ball.current_position[0] == block_x) and (self.ball.current_position[1] == block_y):
-                            self.ball.is_moving_up = not self.ball.is_moving_up
-                            block.alive = False
-                            self.remove_block(block.length, block.position)
+                    if (block.position_in_frame[0] <= self.ball.current_position[0] <= block.position_in_frame[0]
+                        + block.length) and (self.ball.current_position[1] == block.position_in_frame[1]):
+                        self.ball.is_moving_up = not self.ball.is_moving_up
+                        block.alive = False
+                        self.remove_block(block.length, block.position)
 
         if (self.ball.current_position[0] == self.display_width) or (self.ball.current_position[0] == 0):
             self.ball.is_moving_right = not self.ball.is_moving_right
@@ -112,4 +108,4 @@ class Game:
 
     def draw_block(self, block):
         for k in range(block.length):
-            self.drawer.draw((block.position_in_frame[0] + k , block.position_in_frame[1]), 2)
+            self.drawer.draw((block.position_in_frame[0] + k, block.position_in_frame[1]), 2)
