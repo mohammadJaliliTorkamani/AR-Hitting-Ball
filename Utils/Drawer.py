@@ -6,7 +6,7 @@ class Drawer:
     BALL_DRAWING = 1
     BLOCK_DRAWING = 2
 
-    _PIXEL_DIMENSION = 10
+    PIXEL_DIMENSION = 10
 
     _BLOCK_COLOR = (255, 0, 0)
     _BALL_COLOR = (0, 0, 255)
@@ -27,10 +27,10 @@ class Drawer:
                 Drawer._BALL_COLOR if value == Drawer.BALL_DRAWING else Drawer._BLOCK_COLOR)
 
             if (value == Drawer.BALL_DRAWING) or (value == Drawer.SURFACE_DRAWING):
-                cv2.circle(self.output, point, Drawer._PIXEL_DIMENSION, color, cv2.FILLED)
+                cv2.circle(self.output, point, Drawer.PIXEL_DIMENSION, color, cv2.FILLED)
             else:
-                start_pos = (point[0] - int(Drawer._PIXEL_DIMENSION / 2), point[1] - int(Drawer._PIXEL_DIMENSION / 2))
-                end_pos = (point[0] + int(Drawer._PIXEL_DIMENSION / 2), point[1] + int(Drawer._PIXEL_DIMENSION / 2))
+                start_pos = (point[0] - int(Drawer.PIXEL_DIMENSION / 2), point[1] - int(Drawer.PIXEL_DIMENSION / 2))
+                end_pos = (point[0] + int(Drawer.PIXEL_DIMENSION / 2), point[1] + int(Drawer.PIXEL_DIMENSION / 2))
                 cv2.rectangle(self.output, start_pos, end_pos, color, cv2.FILLED)
 
     def clear(self, pos):

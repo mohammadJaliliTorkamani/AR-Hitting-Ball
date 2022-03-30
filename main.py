@@ -9,7 +9,6 @@ from Thread.VideoThread import VideoThread
 from Utils.Drawer import Drawer
 from Utils.Utility import convert_cv_qt
 
-
 class App(QWidget):
 
     def __init__(self, display_width, display_height, window_title):

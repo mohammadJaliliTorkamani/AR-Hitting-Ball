@@ -4,6 +4,7 @@ from Entity.Player import Player
 from Entity.Surface import Surface
 from Utils.Drawer import Drawer
 from Utils.HandDetector import HandDetector
+from Utils.Utility import play_beep
 
 
 class Game:
@@ -12,7 +13,7 @@ class Game:
         self.blocks_board = Board(blocks_size)
         self.player = Player()
         self.ball = Ball()
-        self.surface = Surface(800)
+        self.surface = Surface(self.display_height - 100)
         self.drawer = drawer
         self.detector = HandDetector()
         self.game_begun = False
@@ -79,22 +80,28 @@ class Game:
                         block.alive = False
                         self.remove_block(block.length, block.position)
                         self.ball.is_moving_up = not self.ball.is_moving_up
+                        play_beep()
 
         # HORIZONTAL COLLISION CHECK
         if (self.ball.current_position[0] == self.display_width) or (self.ball.current_position[0] == 0):
             self.ball.is_moving_right = not self.ball.is_moving_right
+            play_beep()
 
         # VERTICAL (TOP SIDE) COLLISION CHECK
         elif self.ball.current_position[1] == 0:
             self.ball.is_moving_up = False
+            play_beep()
 
         # VERTICAL (BOTTOM SIDE) COLLISION CHECK
         elif self.ball.current_position[1] == self.display_height:
             print("You lose!")
+            play_beep()
+            play_beep()
 
         elif ((self.surface.current_x <= self.ball.current_position[0] <= self.surface.get_end_x())
-              and ((self.ball.current_position[1] + Drawer._PIXEL_DIMENSION) == self.surface.y)):
+              and ((self.ball.current_position[1] + Drawer.PIXEL_DIMENSION) == self.surface.y)):
             self.ball.is_moving_up = True
+            play_beep()
 
         new_pos_x = (self.ball.current_position[0] + 1) if self.ball.is_moving_right \
             else (self.ball.current_position[0] - 1)

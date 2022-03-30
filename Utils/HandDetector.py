@@ -9,8 +9,8 @@ class HandDetector:
         self.mpDraw = mp.solutions.drawing_utils
 
     def detect_gesture(self, cv_img):
-        imgRGB = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
-        results = self.hands.process(imgRGB)
+        img_rgb = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
+        results = self.hands.process(img_rgb)
         _cx, _cy = -1, -1
         points_status = {}
 
