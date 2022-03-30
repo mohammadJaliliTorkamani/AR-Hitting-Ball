@@ -12,9 +12,9 @@ from Utils.Utility import convert_cv_qt
 
 class App(QWidget):
 
-    def __init__(self, display_width, display_height):
+    def __init__(self, display_width, display_height, window_title):
         super().__init__()
-        self.setWindowTitle("Tik-Tak-Toe Game!")
+        self.setWindowTitle(window_title)
         self.display_width = display_width
         self.display_height = display_height
         self.image_label = QLabel(self)
@@ -37,7 +37,7 @@ class App(QWidget):
 
     @pyqtSlot(np.ndarray)
     def update_image(self, cv_img):
-        self.interrupt_to_detect_hand_counter = (self.interrupt_to_detect_hand_counter + 1) % 10
+        self.interrupt_to_detect_hand_counter = (self.interrupt_to_detect_hand_counter + 1) % 3
         if self.interrupt_to_detect_hand_counter == 0:
             self.game.detect_gesture(cv_img)
             if self.game.player.is_visible:
@@ -55,6 +55,6 @@ class App(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    a = App(1280, 960)
+    a = App(1280, 960, "Tik Tak Toe")
     a.show()
     sys.exit(app.exec_())
