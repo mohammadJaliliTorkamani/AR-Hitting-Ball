@@ -11,11 +11,12 @@ from Utils.Utility import convert_cv_qt
 
 
 class App(QWidget):
-    def __init__(self):
+
+    def __init__(self, display_width, display_height):
         super().__init__()
         self.setWindowTitle("Tik-Tak-Toe Game!")
-        self.display_width = 1280
-        self.display_height = 960
+        self.display_width = display_width
+        self.display_height = display_height
         self.image_label = QLabel(self)
         self.image_label.resize(self.display_width, self.display_height)
 
@@ -54,6 +55,6 @@ class App(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    a = App()
+    a = App(1280, 960)
     a.show()
     sys.exit(app.exec_())

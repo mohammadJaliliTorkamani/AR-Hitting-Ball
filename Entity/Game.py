@@ -93,7 +93,7 @@ class Game:
 
         elif ((self.surface.current_x <= self.ball.current_position[0] <= (
                 self.surface.current_x + self.surface.length))
-              and ((self.ball.current_position[1] + self.drawer.pixel_dim) == self.surface.y)):
+              and ((self.ball.current_position[1] + Drawer._PIXEL_DIMENSION) == self.surface.y)):
             self.ball.is_moving_up = True
 
         new_pos_x = (self.ball.current_position[0] + 1) if self.ball.is_moving_right \
