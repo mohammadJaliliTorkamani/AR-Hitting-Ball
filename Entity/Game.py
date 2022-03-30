@@ -48,10 +48,10 @@ class Game:
         for i in range(self.surface.length):
             self.drawer.draw((self.surface.current_x + i, self.surface.y), 0)
 
-    def clear_last_ball(self):
+    def clear_recent_ball(self):
         self.drawer.clear(self.ball.last_position)
 
-    def draw_ball(self):
+    def draw_new_ball(self):
         self.drawer.draw(self.ball.current_position, 1)
 
     def remove_block(self, block_length, block_position):
@@ -74,37 +74,35 @@ class Game:
                 if block.alive:
                     if (block.position_in_frame[0] <= self.ball.current_position[0] <= block.position_in_frame[0]
                         + block.length) and (self.ball.current_position[1] == block.position_in_frame[1]):
-                        self.ball.is_moving_up = not self.ball.is_moving_up
                         block.alive = False
                         self.remove_block(block.length, block.position)
+                        self.ball.is_moving_up = not self.ball.is_moving_up
 
+        ### HIROZINTAL COLLISION CHECK
         if (self.ball.current_position[0] == self.display_width) or (self.ball.current_position[0] == 0):
             self.ball.is_moving_right = not self.ball.is_moving_right
 
+        ### TOP SIDE COLLISION CHECK
         elif self.ball.current_position[1] == 0:
             self.ball.is_moving_up = False
 
+        ### BOTTOM SIDE COLLISION CHECK
         elif self.ball.current_position[1] == self.display_height:
             print("You lose!")
-            pass
+
         elif ((self.surface.current_x <= self.ball.current_position[0] <= (
                 self.surface.current_x + self.surface.length))
-              and ((self.ball.current_position[1] + 10) == self.surface.y)):
+              and ((self.ball.current_position[1] + self.drawer.pixel_dim) == self.surface.y)):
             self.ball.is_moving_up = True
 
-        if self.ball.is_moving_right:
-            new_pos_x = (self.ball.current_position[0] + 1)
-        else:
-            new_pos_x = (self.ball.current_position[0] - 1)
-
-        if self.ball.is_moving_up:
-            new_pos_y = (self.ball.current_position[1] - 1)
-        else:
-            new_pos_y = (self.ball.current_position[1] + 1)
+        new_pos_x = (self.ball.current_position[0] + 1) if self.ball.is_moving_right \
+            else (self.ball.current_position[0] - 1)
+        new_pos_y = (self.ball.current_position[1] - 1) if self.ball.is_moving_up \
+            else (self.ball.current_position[1] + 1)
 
         self.ball.current_position = (new_pos_x, new_pos_y)
-        self.clear_last_ball()
-        self.draw_ball()
+        self.clear_recent_ball()
+        self.draw_new_ball()
 
     def draw_block(self, block):
         for k in range(block.length):
