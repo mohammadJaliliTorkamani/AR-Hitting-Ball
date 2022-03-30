@@ -8,9 +8,9 @@ class Drawer:
 
     PIXEL_DIMENSION = 10
 
-    _BLOCK_COLOR = (255, 0, 0)
-    _BALL_COLOR = (0, 0, 255)
-    _SURFACE_COLOR = (250, 253, 15)
+    _BLOCK_COLOR = (255, 255, 0)
+    _BALL_COLOR = (0, 255, 255)
+    _SURFACE_COLOR = (0, 102, 255)
 
     def __init__(self):
         self._mask = {}
