@@ -25,6 +25,7 @@ class App(QWidget):
 
         self.drawer = Drawer()
         self.game = Game((4, 9), (self.display_width, self.display_height), self.drawer)
+        self.game.draw_game_structure()
 
         self.interrupt_to_detect_hand_counter = 0
         self.structure_is_created = False
@@ -35,10 +36,6 @@ class App(QWidget):
 
     @pyqtSlot(np.ndarray)
     def update_image(self, cv_img):
-        if not self.structure_is_created:
-            self.structure_is_created = True
-            self.game.draw_game_structure()
-
         self.interrupt_to_detect_hand_counter = (self.interrupt_to_detect_hand_counter + 1) % 10
         if self.interrupt_to_detect_hand_counter == 0:
             self.game.detect_gesture(cv_img)
@@ -46,64 +43,13 @@ class App(QWidget):
                 self.game.clear_last_surface()
                 self.game.draw_surface()
 
-        if self.game.surface.current_x is not None:  # is True for the first detection
-            self.play_in_step()
+        self.game.move_ball()
         self.show_cv_img_in_frame(cv_img)
 
     def show_cv_img_in_frame(self, cv_img):
         self.drawer.blend(cv_img)
         qt_img = convert_cv_qt(self.drawer.output, self.display_width, self.display_height)
         self.image_label.setPixmap(qt_img)
-
-    def play_in_step(self):
-        self.game.ball.last_position = self.game.ball.current_position
-
-        if not self.game.game_begun:
-            self.game.game_begun = True
-            self.game.ball.last_position = self.game.ball.current_position
-            self.game.ball.current_position = (
-                self.game.surface.current_x + int(self.game.surface.length / 2), self.game.surface.y - 10)
-
-        for block_row in self.game.blocks_board.blocks:
-            for block in block_row:
-                if block.alive:
-                    for k in range(block.length):
-                        block_x = int(block.position[1] / (
-                                self.game.blocks_board.size[1] + 1) * self.game.display_width) + k - int(block.length / 2)
-                        block_y = int(0.4 * (block.position[0] / (
-                                self.game.blocks_board.size[0] + 1)) * self.game.display_height) + 10
-                        if (self.game.ball.current_position[0] == block_x) and (self.game.ball.current_position[1] == block_y):
-                            self.game.ball.is_moving_up = not self.game.ball.is_moving_up
-                            block.alive = False
-                            self.game.remove_block(block.length,block.position)
-
-        if (self.game.ball.current_position[0] == self.game.display_width) or (self.game.ball.current_position[0] == 0):
-            self.game.ball.is_moving_right = not self.game.ball.is_moving_right
-
-        elif self.game.ball.current_position[1] == 0:
-            self.game.ball.is_moving_up = False
-
-        elif self.game.ball.current_position[1] == self.game.display_height:
-            print("You lose!")
-            pass
-        elif ((self.game.surface.current_x <= self.game.ball.current_position[0] <= (
-                self.game.surface.current_x + self.game.surface.length))
-              and ((self.game.ball.current_position[1] + 10) == self.game.surface.y)):
-            self.game.ball.is_moving_up = True
-
-        if self.game.ball.is_moving_right:
-            new_pos_x = (self.game.ball.current_position[0] + 1)
-        else:
-            new_pos_x = (self.game.ball.current_position[0] - 1)
-
-        if self.game.ball.is_moving_up:
-            new_pos_y = (self.game.ball.current_position[1] - 1)
-        else:
-            new_pos_y = (self.game.ball.current_position[1] + 1)
-
-        self.game.ball.current_position = (new_pos_x, new_pos_y)
-        self.game.clear_last_ball()
-        self.game.draw_ball()
 
 
 if __name__ == "__main__":

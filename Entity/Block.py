@@ -3,4 +3,5 @@ class Block:
         self.id = block_id
         self.alive = True
         self.position = position
+        self.position_in_frame = None
         self.length = 50

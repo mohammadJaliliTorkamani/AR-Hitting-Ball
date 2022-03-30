@@ -21,10 +21,10 @@ class Game:
             for block in block_row:
                 row = block.position[0]
                 col = block.position[1]
-                for k in range(block.length):
-                    self.drawer.draw(
-                        (int(col / (self.blocks_board.size[1] + 1) * self.display_width) + k - int(block.length / 2),
-                         int(0.4 * (row / (self.blocks_board.size[0] + 1)) * self.display_height) + 10), 2)
+                block.position_in_frame = (
+                    int(col / (self.blocks_board.size[1] + 1) * self.display_width) - int(block.length / 2),
+                    int(0.4 * (row / (self.blocks_board.size[0] + 1)) * self.display_height) + 10)
+                self.draw_block(block)
 
     def detect_gesture(self, cv_img):
         visible, position = self.detector.detect_gesture(cv_img)
@@ -34,6 +34,10 @@ class Game:
             self.player.current_position = position
             self.surface.last_x = self.surface.current_x
             self.surface.current_x = position[0]
+            if not self.game_begun:
+                self.game_begun = True
+                self.ball.current_position = (
+                    self.surface.current_x + int(self.surface.length / 2), self.surface.y - 10)
 
     def clear_last_surface(self):
         if self.surface.last_x is not None:  # is True for the first detection
@@ -50,10 +54,62 @@ class Game:
     def draw_ball(self):
         self.drawer.draw(self.ball.current_position, 1)
 
-    def remove_block(self, block_length,block_position):
+    def remove_block(self, block_length, block_position):
         for k in range(block_length):
             block_x = int(block_position[1] / (
                     self.blocks_board.size[1] + 1) * self.display_width) + k - int(block_length / 2)
             block_y = int(0.4 * (block_position[0] / (
                     self.blocks_board.size[0] + 1)) * self.display_height) + 10
             self.drawer.clear((block_x, block_y))
+
+    def move_ball(self):
+        if self.surface.current_x is None:
+            return
+
+        self.ball.last_position = self.ball.current_position
+
+        ### BLOCK COLLISION STATE CHECK
+        for block_row in self.blocks_board.blocks:
+            for block in block_row:
+                if block.alive:
+                    for k in range(block.length):
+                        block_x = int(block.position[1] / (
+                                self.blocks_board.size[1] + 1) * self.display_width) + k - int(block.length / 2)
+                        block_y = int(0.4 * (block.position[0] / (
+                                self.blocks_board.size[0] + 1)) * self.display_height) + 10
+                        if (self.ball.current_position[0] == block_x) and (self.ball.current_position[1] == block_y):
+                            self.ball.is_moving_up = not self.ball.is_moving_up
+                            block.alive = False
+                            self.remove_block(block.length, block.position)
+
+        if (self.ball.current_position[0] == self.display_width) or (self.ball.current_position[0] == 0):
+            self.ball.is_moving_right = not self.ball.is_moving_right
+
+        elif self.ball.current_position[1] == 0:
+            self.ball.is_moving_up = False
+
+        elif self.ball.current_position[1] == self.display_height:
+            print("You lose!")
+            pass
+        elif ((self.surface.current_x <= self.ball.current_position[0] <= (
+                self.surface.current_x + self.surface.length))
+              and ((self.ball.current_position[1] + 10) == self.surface.y)):
+            self.ball.is_moving_up = True
+
+        if self.ball.is_moving_right:
+            new_pos_x = (self.ball.current_position[0] + 1)
+        else:
+            new_pos_x = (self.ball.current_position[0] - 1)
+
+        if self.ball.is_moving_up:
+            new_pos_y = (self.ball.current_position[1] - 1)
+        else:
+            new_pos_y = (self.ball.current_position[1] + 1)
+
+        self.ball.current_position = (new_pos_x, new_pos_y)
+        self.clear_last_ball()
+        self.draw_ball()
+
+    def draw_block(self, block):
+        for k in range(block.length):
+            self.drawer.draw((block.position_in_frame[0] + k , block.position_in_frame[1]), 2)
