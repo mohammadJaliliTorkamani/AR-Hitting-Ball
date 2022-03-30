@@ -2,12 +2,17 @@ import cv2
 
 
 class Drawer:
+
+    SURFACE_DRAWING = 0
+    BALL_DRAWING = 1
+    BLOCK_DRAWING = 2
+
     def __init__(self):
         self._mask = {}
         self.output = None
         self.pixel_dim = 10
 
-    def draw(self, position, mode):  # modes: Player's Surface : 0 , Ball : 1, Block : 2
+    def draw(self, position, mode):
         self._mask[position] = mode
         return self
 

@@ -2,6 +2,7 @@ from Entity.Ball import Ball
 from Entity.Board import Board
 from Entity.Player import Player
 from Entity.Surface import Surface
+from Utils.Drawer import Drawer
 from Utils.HandDetector import HandDetector
 
 
@@ -46,13 +47,13 @@ class Game:
 
     def draw_surface(self):
         for i in range(self.surface.length):
-            self.drawer.draw((self.surface.current_x + i, self.surface.y), 0)
+            self.drawer.draw((self.surface.current_x + i, self.surface.y), Drawer.SURFACE_DRAWING)
 
     def clear_recent_ball(self):
         self.drawer.clear(self.ball.last_position)
 
     def draw_new_ball(self):
-        self.drawer.draw(self.ball.current_position, 1)
+        self.drawer.draw(self.ball.current_position, Drawer.BALL_DRAWING)
 
     def remove_block(self, block_length, block_position):
         for k in range(block_length):
@@ -106,4 +107,4 @@ class Game:
 
     def draw_block(self, block):
         for k in range(block.length):
-            self.drawer.draw((block.position_in_frame[0] + k, block.position_in_frame[1]), 2)
+            self.drawer.draw((block.position_in_frame[0] + k, block.position_in_frame[1]), Drawer.BLOCK_DRAWING)
