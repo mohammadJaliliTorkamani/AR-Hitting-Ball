@@ -6,3 +6,8 @@ class Surface:
         self.current_x = None
         self.last_x = None
         self.y = y
+
+    def get_end_x(self):
+        if self.current_x is not None:
+            return self.current_x + self.length
+        return -1

@@ -69,30 +69,30 @@ class Game:
 
         self.ball.last_position = self.ball.current_position
 
-        ### BLOCK COLLISION STATE CHECK
+        # BLOCK COLLISION STATE CHECK
         for block_row in self.blocks_board.blocks:
             for block in block_row:
                 if block.alive:
-                    if (block.position_in_frame[0] <= self.ball.current_position[0] <= block.position_in_frame[0]
-                        + block.length) and (self.ball.current_position[1] == block.position_in_frame[1]):
+                    if (block.position_in_frame[0] <= self.ball.current_position[0] <=
+                        block.get_end_position_in_frame()[0]) and (
+                            self.ball.current_position[1] == block.position_in_frame[1]):
                         block.alive = False
                         self.remove_block(block.length, block.position)
                         self.ball.is_moving_up = not self.ball.is_moving_up
 
-        ### HIROZINTAL COLLISION CHECK
+        # HORIZONTAL COLLISION CHECK
         if (self.ball.current_position[0] == self.display_width) or (self.ball.current_position[0] == 0):
             self.ball.is_moving_right = not self.ball.is_moving_right
 
-        ### TOP SIDE COLLISION CHECK
+        # VERTICAL (TOP SIDE) COLLISION CHECK
         elif self.ball.current_position[1] == 0:
             self.ball.is_moving_up = False
 
-        ### BOTTOM SIDE COLLISION CHECK
+        # VERTICAL (BOTTOM SIDE) COLLISION CHECK
         elif self.ball.current_position[1] == self.display_height:
             print("You lose!")
 
-        elif ((self.surface.current_x <= self.ball.current_position[0] <= (
-                self.surface.current_x + self.surface.length))
+        elif ((self.surface.current_x <= self.ball.current_position[0] <= self.surface.get_end_x())
               and ((self.ball.current_position[1] + Drawer._PIXEL_DIMENSION) == self.surface.y)):
             self.ball.is_moving_up = True
 

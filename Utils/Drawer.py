@@ -33,7 +33,6 @@ class Drawer:
                 end_pos = (point[0] + int(Drawer._PIXEL_DIMENSION / 2), point[1] + int(Drawer._PIXEL_DIMENSION / 2))
                 cv2.rectangle(self.output, start_pos, end_pos, color, cv2.FILLED)
 
-
     def clear(self, pos):
         if pos in self._mask:
             del self._mask[pos]
