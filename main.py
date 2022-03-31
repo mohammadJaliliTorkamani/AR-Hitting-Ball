@@ -9,7 +9,15 @@ from Thread.VideoThread import VideoThread
 from Utils.Drawer import Drawer
 from Utils.Utility import convert_cv_qt
 
+_SCREEN_WIDTH = 1280
+_SCREEN_HEIGHT = 960
+_WINDOW_TITLE = "Tik Tak Toe"
+
+
 class App(QWidget):
+    _DETECTION_RATE = 3
+    _VIDEO_STREAM_ADDRESS = "https://192.168.1.155:8080/video"
+    _BLOCKS_BOARD_SIZE = (4, 9)
 
     def __init__(self, display_width, display_height, window_title):
         super().__init__()
@@ -24,19 +32,19 @@ class App(QWidget):
         self.setLayout(vbox)
 
         self.drawer = Drawer()
-        self.game = Game((4, 9), (self.display_width, self.display_height), self.drawer)
+        self.game = Game(App._BLOCKS_BOARD_SIZE, (self.display_width, self.display_height), self.drawer)
         self.game.draw_game_structure()
 
         self.interrupt_to_detect_hand_counter = 0
         self.structure_is_created = False
 
-        self.thread = VideoThread("https://192.168.1.155:8080/video", self.display_width, self.display_height)
+        self.thread = VideoThread(App._VIDEO_STREAM_ADDRESS, self.display_width, self.display_height)
         self.thread.change_pixmap_signal.connect(self.update_image)
         self.thread.start()
 
     @pyqtSlot(np.ndarray)
     def update_image(self, cv_img):
-        self.interrupt_to_detect_hand_counter = (self.interrupt_to_detect_hand_counter + 1) % 3
+        self.interrupt_to_detect_hand_counter = (self.interrupt_to_detect_hand_counter + 1) % App._DETECTION_RATE
         if self.interrupt_to_detect_hand_counter == 0:
             self.game.detect_gesture(cv_img)
             if self.game.player.is_visible:
@@ -54,6 +62,6 @@ class App(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    a = App(1280, 960, "Tik Tak Toe")
+    a = App(_SCREEN_WIDTH, _SCREEN_HEIGHT, _WINDOW_TITLE)
     a.show()
     sys.exit(app.exec_())
