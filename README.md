@@ -7,7 +7,7 @@
 - Using Google's MediaPipe to detect hand gesture;
 
 # Tik-Tak-Toe using AR!
-<img src="https://cdn-icons-png.flaticon.com/512/566/566294.png" width="128"> | <img src="https://editor.analyticsvidhya.com/uploads/232202.png" width="128">
+<img src="https://editor.analyticsvidhya.com/uploads/232202.png" width="128">
 
 <br/>
 
