@@ -37,7 +37,7 @@ This open-source game project aims to implement the game Hitting Ball using Open
 1. Open the project in an IDE (Pycharm is suggested)
 2. Install project dependencies
 3. open main.py
-4. change VideoThread constructor's first parameter into your own camera port (generally is 0)
+4. change `VideoThread.py` constructor's first parameter into your own camera port (generally is 0)
 5. Enjoy playing the game!
 
 <br/>
