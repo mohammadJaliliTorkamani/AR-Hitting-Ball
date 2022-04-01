@@ -34,7 +34,7 @@ This open-source game project aims to implement the game Hitting Ball using Open
 <br/>
 
 ### How to Run?
-1. Open the project in an IDE (Pycharm is Suggested)
+1. Open the project in an IDE (Pycharm is suggested)
 2. Install project dependencies
 3. open main.py
 4. change VideoThread constructor's first parameter into your own camera port (generally is 0)
@@ -51,5 +51,5 @@ This open-source game project aims to implement the game Hitting Ball using Open
 <br/>
 
 ### License
-Click [here](license link "here") to read the license
+Click [here](https://github.com/mohammadJaliliTorkamani/AR-Hitting-Ball/blob/master/LICENSE) to read the license
 
