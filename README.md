@@ -44,9 +44,9 @@ This open-source game project aims to implement the game Hitting Ball using Open
 
 ### Output
 
-| <img src="https://github.com/mohammadJaliliTorkamani/AR-Hitting-Ball/blob/master/Screenshots/screenshot_1.png" width="200">  | <img src="https://github.com/mohammadJaliliTorkamani/AR-Hitting-Ball/blob/master/Screenshots/screenshot_2.png" width="200">  |
+| <img src="https://github.com/mohammadJaliliTorkamani/AR-Hitting-Ball/blob/master/Screenshots/screenshot_1.png" width="256">  | <img src="https://github.com/mohammadJaliliTorkamani/AR-Hitting-Ball/blob/master/Screenshots/screenshot_2.png" width="256">  |
 | -- | -- |
-| <img src="https://github.com/mohammadJaliliTorkamani/AR-Hitting-Ball/blob/master/Screenshots/screenshot_3.png" width="200"> | <img src="https://github.com/mohammadJaliliTorkamani/AR-Hitting-Ball/blob/master/Screenshots/screenshot_4.png" width="200"> |
+| <img src="https://github.com/mohammadJaliliTorkamani/AR-Hitting-Ball/blob/master/Screenshots/screenshot_3.png" width="256"> | <img src="https://github.com/mohammadJaliliTorkamani/AR-Hitting-Ball/blob/master/Screenshots/screenshot_4.png" width="256"> |
 
 <br/>
 
