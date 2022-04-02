@@ -1,12 +1,16 @@
 <img src="https://badgen.net/badge/version/1.0.0/blue?icon=github"> <img src = "https://badgen.net/badge/status/active/green?icon=git"> 
 
+<br/>
+<br/>
+<a href="https://www.buymeacoffee.com/mohammadjalili" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+
 ### What's New?
 
 - Legible and Modular Code Development in Python 3.8; 
 - Using OpenCV 4.2 to capture and process frames;
 - Using Google's MediaPipe to detect hand gesture;
 
-# Tik-Tak-Toe using AR!
+# Hitting Ball using AR!
 <img src="https://editor.analyticsvidhya.com/uploads/232202.png" width="128">
 
 <br/>
