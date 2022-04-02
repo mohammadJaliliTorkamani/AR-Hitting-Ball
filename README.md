@@ -1,4 +1,4 @@
-<img src="https://badgen.net/badge/version/1.0.0/blue?icon=github"> <img src = "https://badgen.net/badge/status/ative/green?icon=git"> 
+<img src="https://badgen.net/badge/version/1.0.0/blue?icon=github"> <img src = "https://badgen.net/badge/status/active/green?icon=git"> 
 
 ### What's New?
 
