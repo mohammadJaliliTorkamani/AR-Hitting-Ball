@@ -20,7 +20,8 @@ class VideoThread(QThread):
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.display_height)
 
         while True:
-            ret, cv_img = cap.read()
+            ret, frame = cap.read()
             if ret:
-                cv_img = cv2.flip(cv_img, 1)
-                self.change_pixmap_signal.emit(cv_img)
+                frame = cv2.flip(frame, 1)
+                if frame is not None:
+                    self.change_pixmap_signal.emit(frame)

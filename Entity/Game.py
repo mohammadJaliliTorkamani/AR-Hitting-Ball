@@ -18,6 +18,7 @@ class Game:
         self.surface = Surface(self.display_height - 100)
         self.drawer = Drawer()
         self.game_begun = False
+        self.game_status = None
 
     def draw_game_structure(self):
         for block in itertools.chain.from_iterable(self.blocks_board.blocks):
@@ -53,7 +54,7 @@ class Game:
         self.drawer.draw(self.ball.current_position, Drawer.BALL_DRAWING)
 
     def remove_block(self, block):
-        for k in range(block.block_length):
+        for k in range(block.length):
             block_x = int(block.position[1] / (
                     self.blocks_board.size[1] + 1) * self.display_width) + k - int(block.length / 2)
             block_y = int(0.4 * (block.position[0] / (
@@ -89,6 +90,7 @@ class Game:
         # VERTICAL (BOTTOM SIDE) COLLISION CHECK
         elif self.ball.current_position[1] == self.display_height:
             print("You lose!")
+            self.game_status = False
             play_beep()
             play_beep()
 

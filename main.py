@@ -1,5 +1,6 @@
 import sys
 
+import cv2
 import numpy as np
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QWidget, QApplication, QLabel, QVBoxLayout
@@ -42,16 +43,22 @@ class App(QWidget):
                 self.game.draw_surface()
 
         self.game.move_ball()
-        self.set_frame_within_label(frame)
 
-    def set_frame_within_label(self, frame):
         self.game.blend(frame)
+        cv2.putText(frame, "Game Status: " +
+                    ("Playing" if self.game.game_status is None else (
+                        "You win" if self.game.game_status else "You lose")),
+                    (int(Constants.SCREEN_WIDTH / 2) - 80, Constants.SCREEN_HEIGHT - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.6,
+                    (0, 0, 255) if self.game.game_status else (255, 100, 40), thickness=2)
+        self.set_frame_within_label()
+
+    def set_frame_within_label(self):
         qt_img = convert_cv_qt(self.game.get_drawer_output())
         self.image_label.setPixmap(qt_img)
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    a = App()
-    a.show()
-    sys.exit(app.exec_())
+    q_app = QApplication(sys.argv)
+    app = App()
+    app.show()
+    sys.exit(q_app.exec_())
