@@ -62,7 +62,7 @@ class Game:
             self.drawer.clear((block_x, block_y))
 
     def move_ball(self):
-        if self.surface.current_x is None:
+        if self.surface.current_x is None or self.game_status is not None:
             return
 
         self.ball.last_position = self.ball.current_position
@@ -76,6 +76,7 @@ class Game:
                 self.remove_block(block)
                 self.ball.is_moving_up = not self.ball.is_moving_up
                 play_beep()
+                self.adjust_winning_status()
 
         # HORIZONTAL COLLISION CHECK
         if (self.ball.current_position[0] == self.display_width) or (self.ball.current_position[0] == 0):
@@ -89,7 +90,6 @@ class Game:
 
         # VERTICAL (BOTTOM SIDE) COLLISION CHECK
         elif self.ball.current_position[1] == self.display_height:
-            print("You lose!")
             self.game_status = False
             play_beep()
             play_beep()
@@ -116,3 +116,8 @@ class Game:
 
     def get_drawer_output(self):
         return self.drawer.output
+
+    def adjust_winning_status(self):
+        if len(list(enumerate(
+                filter(lambda block: block.alive, itertools.chain.from_iterable(self.blocks_board.blocks))))) == 0:
+            self.game_status = True
