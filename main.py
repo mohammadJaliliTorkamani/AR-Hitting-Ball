@@ -7,7 +7,6 @@ from PyQt5.QtWidgets import QWidget, QApplication, QLabel, QVBoxLayout
 from Entity.Game import Game
 from Thread.VideoThread import VideoThread
 from Utils import Constants
-from Utils.Drawer import Drawer
 from Utils.Utility import convert_cv_qt
 
 
@@ -23,8 +22,7 @@ class App(QWidget):
         vbox.addWidget(self.image_label)
         self.setLayout(vbox)
 
-        self.drawer = Drawer()
-        self.game = Game(Constants.BLOCKS_BOARD_SIZE,self.drawer)
+        self.game = Game(Constants.BLOCKS_BOARD_SIZE)
         self.game.draw_game_structure()
 
         self.interrupt_to_detect_hand_counter = 0
@@ -47,8 +45,8 @@ class App(QWidget):
         self.show_cv_img_in_frame(frame)
 
     def show_cv_img_in_frame(self, frame):
-        self.drawer.blend(frame)
-        qt_img = convert_cv_qt(self.drawer.output)
+        self.game.blend(frame)
+        qt_img = convert_cv_qt(self.game.get_drawer_output())
         self.image_label.setPixmap(qt_img)
 
 

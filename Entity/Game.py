@@ -9,14 +9,13 @@ from Utils.Utility import play_beep
 
 
 class Game:
-    def __init__(self, blocks_size, drawer, display_size=(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT)):
+    def __init__(self, blocks_size, display_size=(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT)):
         (self.display_width, self.display_height) = display_size
         self.blocks_board = Board(blocks_size)
         self.player = Player()
         self.ball = Ball()
         self.surface = Surface(self.display_height - 100)
-        self.drawer = drawer
-        self.detector = HandDetector()
+        self.drawer = Drawer()
         self.game_begun = False
 
     def draw_game_structure(self):
@@ -28,8 +27,8 @@ class Game:
                     int(0.4 * (row / (self.blocks_board.size[0] + 1)) * self.display_height) + 10)
                 self.draw_block(block)
 
-    def detect_gesture(self, cv_img):
-        visible, position = self.detector.detect_gesture(cv_img)
+    def detect_gesture(self, frame):
+        visible, position = self.player.detect_gesture(frame)
         if visible and (position[0] + self.surface.length <= self.display_width) and (position[0] >= 0):
             self.player.is_visible = visible
             self.player.last_position = self.player.current_position
@@ -50,10 +49,8 @@ class Game:
         for i in range(self.surface.length):
             self.drawer.draw((self.surface.current_x + i, self.surface.y), Drawer.SURFACE_DRAWING)
 
-    def clear_recent_ball(self):
-        self.drawer.clear(self.ball.last_position)
-
     def draw_new_ball(self):
+        self.drawer.clear(self.ball.last_position)
         self.drawer.draw(self.ball.current_position, Drawer.BALL_DRAWING)
 
     def remove_block(self,block):
@@ -109,9 +106,14 @@ class Game:
             else (self.ball.current_position[1] + 1)
 
         self.ball.current_position = (new_pos_x, new_pos_y)
-        self.clear_recent_ball()
         self.draw_new_ball()
 
     def draw_block(self, block):
         for k in range(block.length):
             self.drawer.draw((block.position_in_frame[0] + k, block.position_in_frame[1]), Drawer.BLOCK_DRAWING)
+
+    def blend(self, frame):
+        self.drawer.blend(frame)
+
+    def get_drawer_output(self):
+        return self.drawer.output
