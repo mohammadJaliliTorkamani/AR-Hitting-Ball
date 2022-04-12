@@ -2,6 +2,7 @@ from Entity.Ball import Ball
 from Entity.Board import Board
 from Entity.Player import Player
 from Entity.Surface import Surface
+from Utils import Constants
 from Utils.Drawer import Drawer
 from Utils.HandDetector import HandDetector
 from Utils.Utility import play_beep
@@ -99,7 +100,7 @@ class Game:
             play_beep()
 
         elif ((self.surface.current_x <= self.ball.current_position[0] <= self.surface.get_end_x())
-              and ((self.ball.current_position[1] + Drawer.PIXEL_DIMENSION) == self.surface.y)):
+              and ((self.ball.current_position[1] + Constants.PIXEL_DIMENSION) == self.surface.y)):
             self.ball.is_moving_up = True
             play_beep()
 
