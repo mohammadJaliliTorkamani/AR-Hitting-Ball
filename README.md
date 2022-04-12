@@ -6,7 +6,7 @@
 ### What's New?
 
 - Show Game Status!
-- Legible and Modular Code Development in Python 3.8; 
+- Legible and Modular Code Development in Python 3.8
 
 # Hitting Ball using AR!
 <img src="https://editor.analyticsvidhya.com/uploads/232202.png" width="128">
