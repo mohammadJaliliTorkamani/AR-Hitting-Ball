@@ -9,7 +9,7 @@ from Utils.Utility import play_beep
 
 
 class Game:
-    def __init__(self, blocks_size, display_size, drawer):
+    def __init__(self, blocks_size, drawer, display_size=(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT)):
         (self.display_width, self.display_height) = display_size
         self.blocks_board = Board(blocks_size)
         self.player = Player()
@@ -22,8 +22,7 @@ class Game:
     def draw_game_structure(self):
         for block_row in self.blocks_board.blocks:
             for block in block_row:
-                row = block.position[0]
-                col = block.position[1]
+                row, col = block.position[0], block.position[1]
                 block.position_in_frame = (
                     int(col / (self.blocks_board.size[1] + 1) * self.display_width) - int(block.length / 2),
                     int(0.4 * (row / (self.blocks_board.size[0] + 1)) * self.display_height) + 10)
@@ -57,11 +56,11 @@ class Game:
     def draw_new_ball(self):
         self.drawer.draw(self.ball.current_position, Drawer.BALL_DRAWING)
 
-    def remove_block(self, block_length, block_position):
-        for k in range(block_length):
-            block_x = int(block_position[1] / (
-                    self.blocks_board.size[1] + 1) * self.display_width) + k - int(block_length / 2)
-            block_y = int(0.4 * (block_position[0] / (
+    def remove_block(self,block):
+        for k in range(block.block_length):
+            block_x = int(block.position[1] / (
+                    self.blocks_board.size[1] + 1) * self.display_width) + k - int(block.length / 2)
+            block_y = int(0.4 * (block.position[0] / (
                     self.blocks_board.size[0] + 1)) * self.display_height) + 10
             self.drawer.clear((block_x, block_y))
 
@@ -79,7 +78,7 @@ class Game:
                         block.get_end_position_in_frame()[0]) and (
                             self.ball.current_position[1] == block.position_in_frame[1]):
                         block.alive = False
-                        self.remove_block(block.length, block.position)
+                        self.remove_block(block)
                         self.ball.is_moving_up = not self.ball.is_moving_up
                         play_beep()
 

@@ -20,8 +20,8 @@ class Drawer:
         self._mask[position] = mode
         return self
 
-    def blend(self, cv_img):
-        self.output = cv_img
+    def blend(self, frame):
+        self.output = frame
         for (point, value) in self._mask.items():
             color = Drawer._SURFACE_COLOR if value == Drawer.SURFACE_DRAWING else (
                 Drawer._BALL_COLOR if value == Drawer.BALL_DRAWING else Drawer._BLOCK_COLOR)
@@ -33,9 +33,9 @@ class Drawer:
                 end_pos = (point[0] + int(Constants.PIXEL_DIMENSION / 2), point[1] + int(Constants.PIXEL_DIMENSION / 2))
                 cv2.rectangle(self.output, start_pos, end_pos, color, cv2.FILLED)
 
-    def clear(self, pos):
-        if pos in self._mask:
-            del self._mask[pos]
+    def clear(self, position):
+        if position in self._mask:
+            del self._mask[position]
             return True
         else:
             return False
