@@ -1,10 +1,11 @@
+import itertools
+
 from Entity.Ball import Ball
 from Entity.Board import Board
 from Entity.Player import Player
 from Entity.Surface import Surface
 from Utils import Constants
 from Utils.Drawer import Drawer
-from Utils.HandDetector import HandDetector
 from Utils.Utility import play_beep
 
 
@@ -19,13 +20,12 @@ class Game:
         self.game_begun = False
 
     def draw_game_structure(self):
-        for block_row in self.blocks_board.blocks:
-            for block in block_row:
-                row, col = block.position[0], block.position[1]
-                block.position_in_frame = (
-                    int(col / (self.blocks_board.size[1] + 1) * self.display_width) - int(block.length / 2),
-                    int(0.4 * (row / (self.blocks_board.size[0] + 1)) * self.display_height) + 10)
-                self.draw_block(block)
+        for block in itertools.chain.from_iterable(self.blocks_board.blocks):
+            row, col = block.position[0], block.position[1]
+            block.position_in_frame = (
+                int(col / (self.blocks_board.size[1] + 1) * self.display_width) - int(block.length / 2),
+                int(0.4 * (row / (self.blocks_board.size[0] + 1)) * self.display_height) + 10)
+            self.draw_block(block)
 
     def detect_gesture(self, frame):
         visible, position = self.player.detect_gesture(frame)
@@ -42,18 +42,17 @@ class Game:
 
     def clear_last_surface(self):
         if self.surface.last_x is not None:  # is True for the first detection
-            for i in range(self.surface.length):
-                self.drawer.clear((self.surface.last_x + i, self.surface.y))
+            [self.drawer.clear((self.surface.last_x + i, self.surface.y)) for i in range(self.surface.length)]
 
     def draw_surface(self):
-        for i in range(self.surface.length):
-            self.drawer.draw((self.surface.current_x + i, self.surface.y), Drawer.SURFACE_DRAWING)
+        [self.drawer.draw((self.surface.current_x + i, self.surface.y), Drawer.SURFACE_DRAWING) for i in
+         range(self.surface.length)]
 
     def draw_new_ball(self):
         self.drawer.clear(self.ball.last_position)
         self.drawer.draw(self.ball.current_position, Drawer.BALL_DRAWING)
 
-    def remove_block(self,block):
+    def remove_block(self, block):
         for k in range(block.block_length):
             block_x = int(block.position[1] / (
                     self.blocks_board.size[1] + 1) * self.display_width) + k - int(block.length / 2)
@@ -68,16 +67,14 @@ class Game:
         self.ball.last_position = self.ball.current_position
 
         # BLOCK COLLISION STATE CHECK
-        for block_row in self.blocks_board.blocks:
-            for block in block_row:
-                if block.alive:
-                    if (block.position_in_frame[0] <= self.ball.current_position[0] <=
-                        block.get_end_position_in_frame()[0]) and (
-                            self.ball.current_position[1] == block.position_in_frame[1]):
-                        block.alive = False
-                        self.remove_block(block)
-                        self.ball.is_moving_up = not self.ball.is_moving_up
-                        play_beep()
+        for block in filter(lambda block: block.alive, itertools.chain.from_iterable(self.blocks_board.blocks)):
+            if (block.position_in_frame[0] <= self.ball.current_position[0] <=
+                block.get_end_position_in_frame()[0]) and (
+                    self.ball.current_position[1] == block.position_in_frame[1]):
+                block.alive = False
+                self.remove_block(block)
+                self.ball.is_moving_up = not self.ball.is_moving_up
+                play_beep()
 
         # HORIZONTAL COLLISION CHECK
         if (self.ball.current_position[0] == self.display_width) or (self.ball.current_position[0] == 0):

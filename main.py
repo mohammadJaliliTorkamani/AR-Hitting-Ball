@@ -42,9 +42,9 @@ class App(QWidget):
                 self.game.draw_surface()
 
         self.game.move_ball()
-        self.show_cv_img_in_frame(frame)
+        self.set_frame_within_label(frame)
 
-    def show_cv_img_in_frame(self, frame):
+    def set_frame_within_label(self, frame):
         self.game.blend(frame)
         qt_img = convert_cv_qt(self.game.get_drawer_output())
         self.image_label.setPixmap(qt_img)
