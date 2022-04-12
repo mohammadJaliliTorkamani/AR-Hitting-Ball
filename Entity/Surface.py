@@ -1,8 +1,9 @@
-class Surface:
-    _SURFACE_LENGTH = 70
+from Utils import Constants
 
+
+class Surface:
     def __init__(self, y):
-        self.length = Surface._SURFACE_LENGTH
+        self.length = Constants.SURFACE_LENGTH
         self.current_x = None
         self.last_x = None
         self.y = y

@@ -1,5 +1,7 @@
 import cv2
 
+from Utils import Constants
+
 
 class Drawer:
     SURFACE_DRAWING = 0
@@ -8,9 +10,9 @@ class Drawer:
 
     PIXEL_DIMENSION = 10
 
-    _BLOCK_COLOR = (255, 255, 0)
-    _BALL_COLOR = (0, 255, 255)
-    _SURFACE_COLOR = (0, 102, 255)
+    _BLOCK_COLOR = Constants.BLOCK_COLOR
+    _BALL_COLOR = Constants.BALL_COLOR
+    _SURFACE_COLOR = Constants.SURFACE_COLOR
 
     def __init__(self):
         self._mask = {}

@@ -6,18 +6,12 @@ from PyQt5.QtWidgets import QWidget, QApplication, QLabel, QVBoxLayout
 
 from Entity.Game import Game
 from Thread.VideoThread import VideoThread
+from Utils import Constants
 from Utils.Drawer import Drawer
 from Utils.Utility import convert_cv_qt
 
-_SCREEN_WIDTH = 1280
-_SCREEN_HEIGHT = 960
-_WINDOW_TITLE = "Tik Tak Toe"
-
 
 class App(QWidget):
-    _DETECTION_RATE = 3
-    _VIDEO_STREAM_ADDRESS = "https://192.168.1.155:8080/video"
-    _BLOCKS_BOARD_SIZE = (4, 9)
 
     def __init__(self, display_width, display_height, window_title):
         super().__init__()
@@ -32,19 +26,19 @@ class App(QWidget):
         self.setLayout(vbox)
 
         self.drawer = Drawer()
-        self.game = Game(App._BLOCKS_BOARD_SIZE, (self.display_width, self.display_height), self.drawer)
+        self.game = Game(Constants.BLOCKS_BOARD_SIZE, (self.display_width, self.display_height), self.drawer)
         self.game.draw_game_structure()
 
         self.interrupt_to_detect_hand_counter = 0
         self.structure_is_created = False
 
-        self.thread = VideoThread(App._VIDEO_STREAM_ADDRESS, self.display_width, self.display_height)
+        self.thread = VideoThread(Constants.VIDEO_STREAM_ADDRESS, self.display_width, self.display_height)
         self.thread.change_pixmap_signal.connect(self.update_image)
         self.thread.start()
 
     @pyqtSlot(np.ndarray)
     def update_image(self, cv_img):
-        self.interrupt_to_detect_hand_counter = (self.interrupt_to_detect_hand_counter + 1) % App._DETECTION_RATE
+        self.interrupt_to_detect_hand_counter = (self.interrupt_to_detect_hand_counter + 1) % Constants.DETECTION_RATE
         if self.interrupt_to_detect_hand_counter == 0:
             self.game.detect_gesture(cv_img)
             if self.game.player.is_visible:
@@ -62,6 +56,6 @@ class App(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    a = App(_SCREEN_WIDTH, _SCREEN_HEIGHT, _WINDOW_TITLE)
+    a = App(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, Constants.WINDOW_TITLE)
     a.show()
     sys.exit(app.exec_())
