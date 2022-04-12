@@ -1,4 +1,7 @@
-<img src="https://badgen.net/badge/version/1.0.0/blue?icon=github"> <img src = "https://badgen.net/badge/status/ative/green?icon=git"> 
+<img src="https://badgen.net/badge/version/1.0.0/blue?icon=github"> <img src = "https://badgen.net/badge/Status/Stable/green?icon=git"> 
+<br/>
+<br/>
+<a href="https://www.buymeacoffee.com/mohammadjalili" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
 ### What's New?
 
@@ -6,7 +9,7 @@
 - Using OpenCV 4.2 to capture and process frames;
 - Using Google's MediaPipe to detect hand gesture;
 
-# Tik-Tak-Toe using AR!
+# Hitting Ball using AR!
 <img src="https://editor.analyticsvidhya.com/uploads/232202.png" width="128">
 
 <br/>
@@ -44,9 +47,9 @@ This open-source game project aims to implement the game Hitting Ball using Open
 
 ### Output
 
-| [Screenshot 1](Screenshot 1 link)  | [Screenshot 2](Screenshot 2 link)  |
+| <img src="https://github.com/mohammadJaliliTorkamani/AR-Hitting-Ball/blob/master/Screenshots/screenshot_1.png" width="256">  | <img src="https://github.com/mohammadJaliliTorkamani/AR-Hitting-Ball/blob/master/Screenshots/screenshot_2.png" width="256">  |
 | -- | -- |
-| [Screenshot 3](Screenshot 3 link) | [Screenshot 4](Screenshot 4 link) |
+| <img src="https://github.com/mohammadJaliliTorkamani/AR-Hitting-Ball/blob/master/Screenshots/screenshot_3.png" width="256"> | <img src="https://github.com/mohammadJaliliTorkamani/AR-Hitting-Ball/blob/master/Screenshots/screenshot_4.png" width="256"> |
 
 <br/>
 
