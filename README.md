@@ -5,7 +5,7 @@
 
 ### What's New?
 
-- Show Game Status!
+- Accidental block hiding challenge!
 - Legible and Modular Code Development in Python 3.8
 
 # Hitting Ball using AR!
