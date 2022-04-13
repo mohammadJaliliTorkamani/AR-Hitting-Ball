@@ -27,7 +27,6 @@ class App(QWidget):
         self.game.draw_game_structure()
 
         self.interrupt_to_detect_hand_counter = 0
-        self.structure_is_created = False
 
         self.thread = VideoThread(Constants.VIDEO_STREAM_ADDRESS)
         self.thread.change_pixmap_signal.connect(self.update_image)

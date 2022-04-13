@@ -17,7 +17,6 @@ class Game:
         self.ball = Ball()
         self.surface = Surface(self.display_height - 100)
         self.drawer = Drawer()
-        self.game_begun = False
         self.game_status = None
 
     def draw_game_structure(self):
@@ -36,8 +35,7 @@ class Game:
             self.player.current_position = position
             self.surface.last_x = self.surface.current_x
             self.surface.current_x = position[0]
-            if not self.game_begun:
-                self.game_begun = True
+            if self.ball.current_position == (0,0):
                 self.ball.current_position = (
                     self.surface.current_x + int(self.surface.length / 2), self.surface.y - 10)
 
