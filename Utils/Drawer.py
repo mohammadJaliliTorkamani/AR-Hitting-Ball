@@ -8,10 +8,6 @@ class Drawer:
     BALL_DRAWING = 1
     BLOCK_DRAWING = 2
 
-    _BLOCK_COLOR = Constants.BLOCK_COLOR
-    _BALL_COLOR = Constants.BALL_COLOR
-    _SURFACE_COLOR = Constants.SURFACE_COLOR
-
     def __init__(self):
         self._mask = {}
         self.output = None
@@ -23,8 +19,8 @@ class Drawer:
     def blend(self, frame):
         self.output = frame
         for (point, value) in self._mask.items():
-            color = Drawer._SURFACE_COLOR if value == Drawer.SURFACE_DRAWING else (
-                Drawer._BALL_COLOR if value == Drawer.BALL_DRAWING else Drawer._BLOCK_COLOR)
+            color = Constants.SURFACE_COLOR if value == Drawer.SURFACE_DRAWING else (
+                Constants.BALL_COLOR if value == Drawer.BALL_DRAWING else Constants.BLOCK_COLOR)
 
             if (value == Drawer.BALL_DRAWING) or (value == Drawer.SURFACE_DRAWING):
                 cv2.circle(self.output, point, Constants.PIXEL_DIMENSION, color, cv2.FILLED)
