@@ -8,6 +8,7 @@ class Block:
         self.position = position
         self.position_in_frame = None
         self.alive = True
+        self.hidden = False
 
     def get_end_position_in_frame(self):
         return self.position_in_frame[0] + self.length, self.position_in_frame[1]

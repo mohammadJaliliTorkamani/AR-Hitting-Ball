@@ -1,4 +1,7 @@
 import itertools
+import random
+import threading
+import time
 
 from Entity.Ball import Ball
 from Entity.Board import Board
@@ -18,9 +21,28 @@ class Game:
         self.surface = Surface(self.display_height - 100)
         self.drawer = Drawer()
         self.game_status = None
+        self.hidden_block_candidate = None
+        # RepeatedTimer(2, self.hide_blocks)
+
+        thread = threading.Thread(target=self.hide_blocks, daemon=True)
+        thread.start()
+
+    def hide_blocks(self):
+        while True:
+            if self.hidden_block_candidate is not None:
+                self.hidden_block_candidate.hidden = False
+            alive_shown_blocks = list(filter(lambda block: block.alive and not block.hidden,
+                                             itertools.chain.from_iterable(self.blocks_board.blocks)))
+            print(len(alive_shown_blocks))
+            self.hidden_block_candidate = alive_shown_blocks[random.randint(0, len(alive_shown_blocks) - 1)]
+            self.hidden_block_candidate.hidden = True
+            print(self.hidden_block_candidate.position)
+            time.sleep(1)
+
+
 
     def draw_game_structure(self):
-        for block in itertools.chain.from_iterable(self.blocks_board.blocks):
+        for block in filter(lambda block: block.alive and not block.hidden, itertools.chain.from_iterable(self.blocks_board.blocks)):
             row, col = block.position[0], block.position[1]
             block.position_in_frame = (
                 int(col / (self.blocks_board.size[1] + 1) * self.display_width) - int(block.length / 2),
@@ -66,7 +88,7 @@ class Game:
         self.ball.last_position = self.ball.current_position
 
         # BLOCK COLLISION STATE CHECK
-        for block in filter(lambda block: block.alive, itertools.chain.from_iterable(self.blocks_board.blocks)):
+        for block in filter(lambda block: block.alive and not block.hidden, itertools.chain.from_iterable(self.blocks_board.blocks)):
             if (block.position_in_frame[0] <= self.ball.current_position[0] <=
                 block.get_end_position_in_frame()[0]) and (
                     self.ball.current_position[1] == block.position_in_frame[1]):
@@ -119,3 +141,30 @@ class Game:
         if len(list(enumerate(
                 filter(lambda block: block.alive, itertools.chain.from_iterable(self.blocks_board.blocks))))) == 0:
             self.game_status = True
+
+class RepeatedTimer(object):
+  def __init__(self, interval, function, *args, **kwargs):
+    self._timer = None
+    self.interval = interval
+    self.function = function
+    self.args = args
+    self.kwargs = kwargs
+    self.is_running = False
+    self.next_call = time.time()
+    self.start()
+
+  def _run(self):
+    self.is_running = False
+    self.start()
+    self.function(*self.args, **self.kwargs)
+
+  def start(self):
+    if not self.is_running:
+      self.next_call += self.interval
+      self._timer = threading.Timer(self.next_call - time.time(), self._run)
+      self._timer.start()
+      self.is_running = True
+
+  def stop(self):
+    self._timer.cancel()
+    self.is_running = False
