@@ -5,9 +5,8 @@
 
 ### What's New?
 
-- Legible and Modular Code Development in Python 3.8; 
-- Using OpenCV 4.2 to capture and process frames;
-- Using Google's MediaPipe to detect hand gesture;
+- Show Game Status!
+- Legible and Modular Code Development in Python 3.8
 
 # Hitting Ball using AR!
 <img src="https://editor.analyticsvidhya.com/uploads/232202.png" width="128">
