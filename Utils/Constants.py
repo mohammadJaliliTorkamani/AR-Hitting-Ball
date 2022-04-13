@@ -11,3 +11,4 @@ WINDOW_TITLE = "Tik Tak Toe"
 BLOCK_LENGTH = 50
 PIXEL_DIMENSION = 10
 BEEP_SOUND_ADDRESS = '/usr/share/sounds/freedesktop/stereo/bell.oga'
+BLOCK_HIDE_RATE = 3 #SECONDS
