@@ -6,10 +6,6 @@ from Utils import Constants
 
 
 class Drawer:
-    SURFACE_DRAWING = 0
-    BALL_DRAWING = 1
-    BLOCK_DRAWING = 2
-
     def __init__(self):
         self._mask = {}
         self.output = None
