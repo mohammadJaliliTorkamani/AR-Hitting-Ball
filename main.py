@@ -39,7 +39,7 @@ class App(QWidget):
             self.game.detect_gesture(frame)
             if self.game.player.is_visible:
                 self.game.clear_last_surface()
-                self.game.draw_surface()
+                self.drawer.draw(self.surface)
 
         self.game.move_ball()
 

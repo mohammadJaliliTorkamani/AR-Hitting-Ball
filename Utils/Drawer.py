@@ -1,5 +1,6 @@
 import cv2
 
+from Entity.Surface import Surface
 from Utils import Constants
 
 
@@ -12,22 +13,20 @@ class Drawer:
         self._mask = {}
         self.output = None
 
-    def draw(self, position, mode):
-        self._mask[position] = mode
+    def draw(self, drawable):
+        if type(drawable) is Surface:
+            for i in range(drawable.length):
+                self._mask[(drawable.current_position[0] + i, drawable.current_position[1])] = drawable.color
+
+        else:
+            self._mask[drawable.current_position] = drawable.color
+
         return self
 
     def blend(self, frame):
         self.output = frame
         for (point, value) in self._mask.items():
-            color = Constants.SURFACE_COLOR if value == Drawer.SURFACE_DRAWING else (
-                Constants.BALL_COLOR if value == Drawer.BALL_DRAWING else Constants.BLOCK_COLOR)
-
-            if (value == Drawer.BALL_DRAWING) or (value == Drawer.SURFACE_DRAWING):
-                cv2.circle(self.output, point, Constants.PIXEL_DIMENSION, color, cv2.FILLED)
-            else:
-                start_pos = (point[0] - int(Constants.PIXEL_DIMENSION / 2), point[1] - int(Constants.PIXEL_DIMENSION / 2))
-                end_pos = (point[0] + int(Constants.PIXEL_DIMENSION / 2), point[1] + int(Constants.PIXEL_DIMENSION / 2))
-                cv2.rectangle(self.output, start_pos, end_pos, color, cv2.FILLED)
+            cv2.circle(self.output, point, Constants.PIXEL_DIMENSION, value, cv2.FILLED)
 
     def clear(self, position):
         if position in self._mask:

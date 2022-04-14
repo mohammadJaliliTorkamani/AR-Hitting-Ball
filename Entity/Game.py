@@ -58,13 +58,9 @@ class Game:
             [self.drawer.clear((self.surface.current_position[0] + i, self.surface.current_position[1])) for i in
              range(self.surface.length)]
 
-    def draw_surface(self):
-        [self.drawer.draw((self.surface.current_position[0] + i, self.surface.current_position[1]), Drawer.SURFACE_DRAWING) for i in
-         range(self.surface.length)]
-
     def draw_new_ball(self):
         self.drawer.clear(self.ball.last_position)
-        self.drawer.draw(self.ball.current_position, Drawer.BALL_DRAWING)
+        self.drawer.draw(self.ball)
 
     def clear_block(self, block):
         for k in range(block.length):
@@ -83,9 +79,9 @@ class Game:
         # BLOCK COLLISION STATE CHECK
         for block in filter(lambda block: block.alive and not block.hidden,
                             itertools.chain.from_iterable(self.blocks_board.blocks)):
-            if (block.position_in_frame[0] <= self.ball.current_position[0] <=
-                block.get_end_position_in_frame()[0]) and (
-                    self.ball.current_position[1] == block.position_in_frame[1]):
+            if (block.current_position[0] <= self.ball.current_position[0] <=
+                block.current_position()[0]) and (
+                    self.ball.current_position[1] == block.current_position[1]):
                 block.alive = False
                 self.clear_block(block)
                 self.ball.is_moving_up = not self.ball.is_moving_up
@@ -123,7 +119,7 @@ class Game:
 
     def draw_block(self, block):
         for k in range(block.length):
-            self.drawer.draw((block.position_in_frame[0] + k, block.position_in_frame[1]), Drawer.BLOCK_DRAWING)
+            self.drawer.draw((block.current_position[0] + k, block.current_position[1]), Drawer.BLOCK_DRAWING)
 
     def blend(self, frame):
         self.drawer.blend(frame)
