@@ -3,11 +3,11 @@ from Utils import Constants
 
 
 class Block(Drawable):
-    def __init__(self, block_id, color=(255, 255, 255), current_position=(0, 0)):
+    def __init__(self, block_id, position_in_board,color=(255, 255, 255), current_position=(-1, -1)):
         super().__init__(color,current_position)
         self.id = block_id
         self.length = Constants.BLOCK_LENGTH
-        self.position_in_board = None
+        self.position_in_board = position_in_board
         self.alive = True
         self.hidden = False
 

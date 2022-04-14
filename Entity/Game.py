@@ -47,14 +47,21 @@ class Game:
             self.player.is_visible = visible
             self.player.last_position = self.player.current_position
             self.player.current_position = position
-            self.surface.last_x = self.surface.current_x
-            self.surface.current_x = position[0]
+
+            tmp = list(self.surface.last_position)
+            tmp[0] = self.surface.current_position[0]
+            self.surface.last_position = tuple(tmp)
+
+            tmp = list(self.surface.current_position)
+            tmp[0] = position[0]
+            self.surface.current_position = tuple(tmp)
+
             if self.ball.current_position == (0, 0):
                 self.ball.current_position = (
-                    self.surface.current_x + int(self.surface.length / 2), self.surface.current_position[1] - 10)
+                    self.surface.current_position[0] + int(self.surface.length / 2), self.surface.current_position[1] - 10)
 
     def clear_last_surface(self):
-        if self.surface.current_position[0] is not None:  # is True for the first detection
+        if self.surface.current_position[0] != -1:  # is True for the first detection
             [self.drawer.clear((self.surface.current_position[0] + i, self.surface.current_position[1])) for i in
              range(self.surface.length)]
 
@@ -71,7 +78,7 @@ class Game:
             self.drawer.clear((block_x, block_y))
 
     def move_ball(self):
-        if self.surface.current_position[0] is None or self.game_status is not None:
+        if self.surface.current_position[0] == -1 or self.game_status is not None:
             return
 
         self.ball.last_position = self.ball.current_position
@@ -119,7 +126,7 @@ class Game:
 
     def draw_block(self, block):
         for k in range(block.length):
-            self.drawer.draw((block.current_position[0] + k, block.current_position[1]), Drawer.BLOCK_DRAWING)
+            self.drawer.draw(block)
 
     def blend(self, frame):
         self.drawer.blend(frame)
@@ -138,3 +145,6 @@ class Game:
             self.clear_block(block)
         else:
             self.draw_block(block)
+
+    def draw_surface(self):
+        self.drawer.draw(self.surface)

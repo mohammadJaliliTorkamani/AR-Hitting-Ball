@@ -1,5 +1,6 @@
 import cv2
 
+from Entity.Block import Block
 from Entity.Surface import Surface
 from Utils import Constants
 
@@ -14,10 +15,9 @@ class Drawer:
         self.output = None
 
     def draw(self, drawable):
-        if type(drawable) is Surface:
+        if (type(drawable) is Surface) or (type(drawable) is Block):
             for i in range(drawable.length):
                 self._mask[(drawable.current_position[0] + i, drawable.current_position[1])] = drawable.color
-
         else:
             self._mask[drawable.current_position] = drawable.color
 
