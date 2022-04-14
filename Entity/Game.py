@@ -16,8 +16,8 @@ class Game:
         (self.display_width, self.display_height) = display_size
         self.blocks_board = Board(blocks_size)
         self.player = Player()
-        self.ball = Ball()
-        self.surface = Surface(self.display_height - 100)
+        self.ball = Ball(Constants.BALL_COLOR)
+        self.surface = Surface(Constants.SURFACE_COLOR, (0, self.display_height - 100))
         self.drawer = Drawer()
         self.game_status = None
         self.hidden_block_candidate = None
@@ -35,8 +35,8 @@ class Game:
     def draw_game_structure(self):
         for block in filter(lambda block: block.alive and not block.hidden,
                             itertools.chain.from_iterable(self.blocks_board.blocks)):
-            row, col = block.position[0], block.position[1]
-            block.position_in_frame = (
+            row, col = block.position_in_board[0], block.position_in_board[1]
+            block.current_position = (
                 int(col / (self.blocks_board.size[1] + 1) * self.display_width) - int(block.length / 2),
                 int(0.4 * (row / (self.blocks_board.size[0] + 1)) * self.display_height) + 10)
             self.draw_block(block)
@@ -51,14 +51,15 @@ class Game:
             self.surface.current_x = position[0]
             if self.ball.current_position == (0, 0):
                 self.ball.current_position = (
-                    self.surface.current_x + int(self.surface.length / 2), self.surface.y - 10)
+                    self.surface.current_x + int(self.surface.length / 2), self.surface.current_position[1] - 10)
 
     def clear_last_surface(self):
-        if self.surface.last_x is not None:  # is True for the first detection
-            [self.drawer.clear((self.surface.last_x + i, self.surface.y)) for i in range(self.surface.length)]
+        if self.surface.current_position[0] is not None:  # is True for the first detection
+            [self.drawer.clear((self.surface.current_position[0] + i, self.surface.current_position[1])) for i in
+             range(self.surface.length)]
 
     def draw_surface(self):
-        [self.drawer.draw((self.surface.current_x + i, self.surface.y), Drawer.SURFACE_DRAWING) for i in
+        [self.drawer.draw((self.surface.current_position[0] + i, self.surface.current_position[1]), Drawer.SURFACE_DRAWING) for i in
          range(self.surface.length)]
 
     def draw_new_ball(self):
@@ -67,14 +68,14 @@ class Game:
 
     def clear_block(self, block):
         for k in range(block.length):
-            block_x = int(block.position[1] / (
+            block_x = int(block.position_in_board[1] / (
                     self.blocks_board.size[1] + 1) * self.display_width) + k - int(block.length / 2)
-            block_y = int(0.4 * (block.position[0] / (
+            block_y = int(0.4 * (block.position_in_board[0] / (
                     self.blocks_board.size[0] + 1)) * self.display_height) + 10
             self.drawer.clear((block_x, block_y))
 
     def move_ball(self):
-        if self.surface.current_x is None or self.game_status is not None:
+        if self.surface.current_position[0] is None or self.game_status is not None:
             return
 
         self.ball.last_position = self.ball.current_position
@@ -107,8 +108,8 @@ class Game:
             play_beep()
             play_beep()
 
-        elif ((self.surface.current_x <= self.ball.current_position[0] <= self.surface.get_end_x())
-              and ((self.ball.current_position[1] + Constants.PIXEL_DIMENSION) == self.surface.y)):
+        elif ((self.surface.current_position[0] <= self.ball.current_position[0] <= self.surface.get_end_x())
+              and ((self.ball.current_position[1] + Constants.PIXEL_DIMENSION) == self.surface.current_position[1])):
             self.ball.is_moving_up = True
             play_beep()
 
