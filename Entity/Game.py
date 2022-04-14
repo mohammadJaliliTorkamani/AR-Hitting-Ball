@@ -82,8 +82,8 @@ class Game:
         # BLOCK COLLISION STATE CHECK
         for block in filter(lambda block: block.alive and not block.hidden,
                             itertools.chain.from_iterable(self.blocks_board.blocks)):
-            if (block.current_position[0] <= self.ball.current_position[0] <=
-                block.current_position[0]) and (self.ball.current_position[1] == block.current_position[1]):
+            if (block.current_position[0] <= self.ball.current_position[0] <= block.get_end_position_in_frame()[0]) and \
+                    (self.ball.current_position[1] == block.current_position[1]):
                 block.alive = False
                 self.clear_block(block)
                 self.ball.is_moving_up = not self.ball.is_moving_up
