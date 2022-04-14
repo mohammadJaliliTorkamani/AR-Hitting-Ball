@@ -1,4 +1,5 @@
-BLOCK_COLORS = [(0, 255, 68),(255, 247, 0),(242, 7, 156),(12, 230, 250),(250, 151, 12),(104, 12, 250),(250, 12, 60)]
+BLOCK_COLORS = [(0, 255, 68), (255, 247, 0), (242, 7, 156), (12, 230, 250), (250, 151, 12), (104, 12, 250),
+                (250, 12, 60)]
 BALL_COLOR = (0, 255, 255)
 SURFACE_COLOR = (0, 102, 255)
 SURFACE_LENGTH = 70
@@ -11,4 +12,4 @@ WINDOW_TITLE = "Tik Tak Toe"
 BLOCK_LENGTH = 50
 PIXEL_DIMENSION = 10
 BEEP_SOUND_ADDRESS = '/usr/share/sounds/freedesktop/stereo/bell.oga'
-BLOCK_HIDE_RATE = 3 #SECONDS
+BLOCK_HIDE_RATE = 3  # SECONDS
