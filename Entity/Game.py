@@ -94,8 +94,8 @@ class Game:
                     play_beep()
                     self.adjust_winning_status()
             else:
-                if (block.current_position[0] <= self.ball.current_position[0] <= block.get_end_position_in_frame()[
-                    0]) and \
+                if (block.current_position[0] <= self.ball.current_position[0] <= block.get_end_position_in_frame()[0]) \
+                        and \
                         ((block.current_position[1] - Constants.PIXEL_DIMENSION) <=
                          (self.ball.current_position[1] + Constants.PIXEL_DIMENSION) <=
                          (block.current_position[1] + Constants.PIXEL_DIMENSION)):

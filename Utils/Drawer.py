@@ -21,6 +21,7 @@ class Drawer:
 
     def blend(self, frame):
         self.output = frame
+
         for (point, value) in self._mask.items():
             cv2.circle(self.output, point, Constants.PIXEL_DIMENSION, value, cv2.FILLED)
 
