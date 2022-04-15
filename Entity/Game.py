@@ -82,15 +82,28 @@ class Game:
         # BLOCK COLLISION STATE CHECK
         for block in filter(lambda block: block.alive and not block.hidden,
                             itertools.chain.from_iterable(self.blocks_board.blocks)):
-            if (block.current_position[0] <= self.ball.current_position[0] <= block.get_end_position_in_frame()[0]) and \
-                    ((block.current_position[1] - Constants.PIXEL_DIMENSION) <= (
-                            self.ball.current_position[1] - Constants.PIXEL_DIMENSION) <= (
-                             block.current_position[1] + Constants.PIXEL_DIMENSION)):
-                block.alive = False
-                self.clear_block(block)
-                self.ball.is_moving_up = not self.ball.is_moving_up
-                play_beep()
-                self.adjust_winning_status()
+            if self.ball.is_moving_up:
+                if (block.current_position[0] <= self.ball.current_position[0] <= block.get_end_position_in_frame()[
+                    0]) and \
+                        ((block.current_position[1] - Constants.PIXEL_DIMENSION) <= (
+                                self.ball.current_position[1] - Constants.PIXEL_DIMENSION) <= (
+                                 block.current_position[1] + Constants.PIXEL_DIMENSION)):
+                    block.alive = False
+                    self.clear_block(block)
+                    self.ball.is_moving_up = not self.ball.is_moving_up
+                    play_beep()
+                    self.adjust_winning_status()
+            else:
+                if (block.current_position[0] <= self.ball.current_position[0] <= block.get_end_position_in_frame()[
+                    0]) and \
+                        ((block.current_position[1] - Constants.PIXEL_DIMENSION) <=
+                         (self.ball.current_position[1] + Constants.PIXEL_DIMENSION) <=
+                         (block.current_position[1] + Constants.PIXEL_DIMENSION)):
+                    block.alive = False
+                    self.clear_block(block)
+                    self.ball.is_moving_up = not self.ball.is_moving_up
+                    play_beep()
+                    self.adjust_winning_status()
 
         # HORIZONTAL COLLISION CHECK
         if (self.ball.current_position[0] >= self.display_width) or (self.ball.current_position[0] <= 0):
@@ -109,7 +122,8 @@ class Game:
             play_beep()
 
         elif ((self.surface.current_position[0] <= self.ball.current_position[0] <= self.surface.get_end_x())
-              and ((self.ball.current_position[1] + Constants.PIXEL_DIMENSION) == self.surface.current_position[1])):
+              and ((self.ball.current_position[1] + Constants.PIXEL_DIMENSION) >=
+                   self.surface.current_position[1] - Constants.PIXEL_DIMENSION)):
             self.ball.is_moving_up = True
             play_beep()
 
