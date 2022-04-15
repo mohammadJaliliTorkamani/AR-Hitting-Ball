@@ -5,6 +5,7 @@
 
 ### What's New?
 
+- Inversion Challenge!
 - Colorful Blocks!
 - Accidental block hiding challenge!
 - Legible and Modular Code Development in Python 3.8
