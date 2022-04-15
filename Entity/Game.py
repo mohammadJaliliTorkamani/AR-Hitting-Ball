@@ -83,7 +83,9 @@ class Game:
         for block in filter(lambda block: block.alive and not block.hidden,
                             itertools.chain.from_iterable(self.blocks_board.blocks)):
             if (block.current_position[0] <= self.ball.current_position[0] <= block.get_end_position_in_frame()[0]) and \
-                    (self.ball.current_position[1] == block.current_position[1]):
+                    ((block.current_position[1] - Constants.PIXEL_DIMENSION) <= (
+                            self.ball.current_position[1] - Constants.PIXEL_DIMENSION) <= (
+                             block.current_position[1] + Constants.PIXEL_DIMENSION)):
                 block.alive = False
                 self.clear_block(block)
                 self.ball.is_moving_up = not self.ball.is_moving_up
@@ -91,17 +93,17 @@ class Game:
                 self.adjust_winning_status()
 
         # HORIZONTAL COLLISION CHECK
-        if (self.ball.current_position[0] == self.display_width) or (self.ball.current_position[0] == 0):
+        if (self.ball.current_position[0] >= self.display_width) or (self.ball.current_position[0] <= 0):
             self.ball.is_moving_right = not self.ball.is_moving_right
             play_beep()
 
         # VERTICAL (TOP SIDE) COLLISION CHECK
-        elif self.ball.current_position[1] == 0:
+        elif self.ball.current_position[1] <= 0:
             self.ball.is_moving_up = False
             play_beep()
 
         # VERTICAL (BOTTOM SIDE) COLLISION CHECK
-        elif self.ball.current_position[1] == self.display_height:
+        elif self.ball.current_position[1] >= self.display_height:
             self.game_status = False
             play_beep()
             play_beep()
@@ -111,10 +113,10 @@ class Game:
             self.ball.is_moving_up = True
             play_beep()
 
-        new_pos_x = (self.ball.current_position[0] + 1) if self.ball.is_moving_right \
-            else (self.ball.current_position[0] - 1)
-        new_pos_y = (self.ball.current_position[1] - 1) if self.ball.is_moving_up \
-            else (self.ball.current_position[1] + 1)
+        new_pos_x = (self.ball.current_position[0] + 5) if self.ball.is_moving_right \
+            else (self.ball.current_position[0] - 5)
+        new_pos_y = (self.ball.current_position[1] - 5) if self.ball.is_moving_up \
+            else (self.ball.current_position[1] + 5)
 
         self.ball.current_position = (new_pos_x, new_pos_y)
         self.draw_new_ball()
