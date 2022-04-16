@@ -54,7 +54,7 @@ class Game:
             if self.ball.current_position[0] == -1:
                 self.ball.current_position = (
                     self.surface.current_position[0] + int(self.surface.length / 2),
-                    self.surface.current_position[1] - 10)
+                    self.surface.current_position[1] - Constants.PIXEL_DIMENSION)
 
     def clear_last_surface(self):
         if self.surface.last_position[0] != -1:  # is True for the first detection
@@ -67,11 +67,11 @@ class Game:
 
     def clear_block(self, block):
         for k in range(block.length):
-            block_x = int(block.position_in_board[1] / (
-                    self.blocks_board.size[1] + 1) * self.display_width) + k - int(block.length / 2)
-            block_y = int(0.4 * (block.position_in_board[0] / (
-                    self.blocks_board.size[0] + 1)) * self.display_height) + 10
-            self.drawer.clear((block_x, block_y))
+            block_position = int(
+                block.position_in_board[1] / (self.blocks_board.size[1] + 1) * self.display_width) + k - int(
+                block.length / 2), int(
+                0.4 * (block.position_in_board[0] / (self.blocks_board.size[0] + 1)) * self.display_height) + 10
+            self.drawer.clear(block_position)
 
     def move_ball(self):
         if (self.surface.current_position[0] == -1) or (self.game_status is not None):
@@ -119,7 +119,6 @@ class Game:
         elif self.ball.current_position[1] >= self.display_height:
             self.game_status = False
             play_beep()
-            play_beep()
 
         elif ((self.surface.current_position[0] <= self.ball.current_position[0] <= self.surface.get_end_x())
               and ((self.ball.current_position[1] + Constants.PIXEL_DIMENSION) >=
@@ -127,8 +126,8 @@ class Game:
             self.ball.is_moving_up = True
             play_beep()
 
-        new_pos_x = (self.ball.current_position[0] + 5) if self.ball.is_moving_right \
-            else (self.ball.current_position[0] - 5)
+        new_pos_x = (self.ball.current_position[0] + 5) if self.ball.is_moving_right else (
+                self.ball.current_position[0] - 5)
         new_pos_y = (self.ball.current_position[1] - 5) if self.ball.is_moving_up \
             else (self.ball.current_position[1] + 5)
 
@@ -136,7 +135,7 @@ class Game:
         self.draw_new_ball()
 
     def draw_block(self, block):
-        for k in range(block.length):
+        for _ in range(block.length):
             self.drawer.draw(block)
 
     def blend(self, frame):
