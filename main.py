@@ -6,6 +6,7 @@ from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QWidget, QApplication, QLabel, QVBoxLayout
 
 from Entity.Game import Game
+from Thread.RepeatedTask import RepeatedTimer
 from Thread.VideoThread import VideoThread
 from Utils import Constants
 from Utils.Utility import convert_cv_qt
@@ -26,9 +27,11 @@ class App(QWidget):
         self.game = Game(Constants.BLOCKS_BOARD_SIZE)
         self.game.draw_game_structure()
 
-        self.interrupt_to_detect_hand_counter = 0
+        self.can_detect_hand = False
         self.is_inverted = False
-        self.inversion_counter = 0
+
+        RepeatedTimer(Constants.HAND_DETECTION_RATE, self.invert_boolean, 1)
+        RepeatedTimer(Constants.INVERSION_RATE, self.invert_boolean, 2)
 
         self.thread = VideoThread(Constants.VIDEO_STREAM_ADDRESS)
         self.thread.change_pixmap_signal.connect(self.update_image)
@@ -36,8 +39,7 @@ class App(QWidget):
 
     @pyqtSlot(np.ndarray)
     def update_image(self, frame):
-        self.interrupt_to_detect_hand_counter = (self.interrupt_to_detect_hand_counter + 1) % Constants.DETECTION_RATE
-        if self.interrupt_to_detect_hand_counter == 0:
+        if self.can_detect_hand:
             self.game.detect_gesture(frame)
             if self.game.player.is_visible:
                 self.game.clear_last_surface()
@@ -52,11 +54,13 @@ class App(QWidget):
                     (int(Constants.SCREEN_WIDTH / 2) - 80, Constants.SCREEN_HEIGHT - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.6,
                     (0, 0, 255) if self.game.game_status else (255, 100, 40), thickness=2)
 
-        self.inversion_counter = (self.inversion_counter + 1) % Constants.INVERSION_RATE_FRAME
-        if self.inversion_counter == 0:
+        self.set_frame_within_label(~frame if self.is_inverted else frame)
+
+    def invert_boolean(self, arg):
+        if arg == 1:
+            self.can_detect_hand = not self.can_detect_hand
+        elif arg == 2:
             self.is_inverted = not self.is_inverted
-        frame = ~frame if self.is_inverted else frame
-        self.set_frame_within_label(frame)
 
     def set_frame_within_label(self, frame):
         qt_img = convert_cv_qt(frame)

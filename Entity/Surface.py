@@ -8,6 +8,4 @@ class Surface(Drawable):
         self.length = Constants.SURFACE_LENGTH
 
     def get_end_x(self):
-        if self.current_position[0] is not None:
-            return self.current_position[0] + self.length
-        return -1
+        return self.current_position[0] + self.length
