@@ -1,17 +1,17 @@
 import cv2
-import numpy
-import pygame
+from pygame import mixer
 from PyQt5 import QtGui
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
+from numpy import ndarray
 
 from Utils import Constants
 
-pygame.mixer.init()
-sound = pygame.mixer.Sound(Constants.BEEP_SOUND_ADDRESS)
+mixer.init()
+sound = mixer.Sound(Constants.BEEP_SOUND_ADDRESS)
 
 
-def convert_cv_qt(frame: numpy.ndarray, display_width: int = Constants.SCREEN_WIDTH,
+def convert_cv_qt(frame: ndarray, display_width: int = Constants.SCREEN_WIDTH,
                   display_height: int = Constants.SCREEN_HEIGHT):
     rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     height, width, channel = rgb_image.shape

@@ -1,5 +1,5 @@
 import threading
-import time
+from time import time
 
 
 class RepeatedTimer(object):
@@ -10,7 +10,7 @@ class RepeatedTimer(object):
         self.args = args
         self.kwargs = kwargs
         self.is_running = False
-        self.next_call = time.time()
+        self.next_call = time()
         self.start()
 
     def _run(self):
@@ -21,7 +21,7 @@ class RepeatedTimer(object):
     def start(self):
         if not self.is_running:
             self.next_call += self.interval
-            self._timer = threading.Timer(self.next_call - time.time(), self._run)
+            self._timer = threading.Timer(self.next_call - time(), self._run)
             self._timer.start()
             self.is_running = True
 

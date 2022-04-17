@@ -1,12 +1,12 @@
 import cv2
-import numpy as np
+from numpy import ndarray
 from PyQt5.QtCore import QThread, pyqtSignal
 
 from Utils import Constants
 
 
 class VideoThread(QThread):
-    change_pixmap_signal = pyqtSignal(np.ndarray)
+    change_pixmap_signal = pyqtSignal(ndarray)
 
     def __init__(self, camera_port: str, display_width: int = Constants.SCREEN_WIDTH,
                  display_height: int = Constants.SCREEN_HEIGHT):

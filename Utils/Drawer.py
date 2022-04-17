@@ -1,5 +1,5 @@
 import cv2
-import numpy
+from numpy import ndarray
 
 from Entity.Block import Block
 from Entity.Drawable import Drawable
@@ -23,7 +23,7 @@ class Drawer:
 
         return self
 
-    def blend(self, frame: numpy.ndarray):
+    def blend(self, frame: ndarray):
         self.output = frame
 
         for (point, value) in self._mask.items():

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-import numpy
+from numpy import ndarray
 
 from Utils.HandDetector import HandDetector
 
@@ -12,5 +12,5 @@ class Player:
     is_visible: bool = False
     detector: HandDetector = HandDetector()
 
-    def detect_gesture(self, frame: numpy.ndarray) -> (bool, tuple):
+    def detect_gesture(self, frame: ndarray) -> (bool, tuple):
         return self.detector.detect_gesture(frame)

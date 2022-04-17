@@ -1,10 +1,10 @@
-import sys
+from sys import argv, exit
 
 import cv2
-import numpy
 import numpy as np
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QWidget, QApplication, QLabel, QVBoxLayout
+from numpy import ndarray
 
 from Entity.Game import Game
 from Thread.RepeatedTask import RepeatedTimer
@@ -39,7 +39,7 @@ class App(QWidget):
         self.thread.start()
 
     @pyqtSlot(np.ndarray)
-    def update_image(self, frame: numpy.ndarray):
+    def update_image(self, frame: ndarray):
         if self.can_detect_hand:
             self.game.detect_gesture(frame)
             if self.game.player.is_visible:
@@ -64,13 +64,13 @@ class App(QWidget):
     def invert_is_inverted(self):
         self.is_inverted = not self.is_inverted
 
-    def set_frame_within_label(self, frame: numpy.ndarray):
+    def set_frame_within_label(self, frame: ndarray):
         qt_img = convert_cv_qt(frame)
         self.image_label.setPixmap(qt_img)
 
 
 if __name__ == "__main__":
-    q_app = QApplication(sys.argv)
+    q_app = QApplication(argv)
     app = App()
     app.show()
-    sys.exit(q_app.exec_())
+    exit(q_app.exec_())

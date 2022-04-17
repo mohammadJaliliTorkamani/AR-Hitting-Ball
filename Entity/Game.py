@@ -1,7 +1,7 @@
-import itertools
-import random
+from itertools import chain
+from random import randint
 
-import numpy
+from numpy import ndarray
 
 from Entity.Ball import Ball
 from Entity.Block import Block
@@ -30,14 +30,14 @@ class Game:
         if self._hidden_block_candidate is not None:
             self.toggle_block_visibility(self._hidden_block_candidate)
 
-        alive_shown_blocks = list(filter(lambda block: block.alive and not block.hidden,
-                                         itertools.chain.from_iterable(self.blocks_board.blocks_list)))
-        self._hidden_block_candidate = alive_shown_blocks[random.randint(0, len(alive_shown_blocks) - 1)]
+        alive_shown_blocks = list(
+            filter(lambda block: block.alive and not block.hidden, chain.from_iterable(self.blocks_board.blocks_list)))
+        self._hidden_block_candidate = alive_shown_blocks[randint(0, len(alive_shown_blocks) - 1)]
         self.toggle_block_visibility(self._hidden_block_candidate)
 
     def draw_game_structure(self):
         for block in filter(lambda block: block.alive and not block.hidden,
-                            itertools.chain.from_iterable(self.blocks_board.blocks_list)):
+                            chain.from_iterable(self.blocks_board.blocks_list)):
             row, col = block.position_in_board[0], block.position_in_board[1]
             block.current_position = (
                 int(col / (self.blocks_board.size[1] + 1) * self.display_width) - int(block.length / 2),
@@ -45,7 +45,7 @@ class Game:
                         self.blocks_board.size[0] + 1)) * self.display_height) + Constants.BLOCK_VERTICAL_MARGIN)
             self.draw_block(block)
 
-    def detect_gesture(self, frame: numpy.ndarray):
+    def detect_gesture(self, frame: ndarray):
         visible, position = self.player.detect_gesture(frame)
         if visible and (position[0] + self.surface.length <= self.display_width) and (position[0] >= 0):
             self.player.is_visible = visible
@@ -86,7 +86,7 @@ class Game:
 
         # BLOCK COLLISION STATE CHECK
         for block in filter(lambda block: block.alive and not block.hidden,
-                            itertools.chain.from_iterable(self.blocks_board.blocks_list)):
+                            chain.from_iterable(self.blocks_board.blocks_list)):
             if self.ball.is_moving_up:
                 if (block.current_position[0] <= self.ball.current_position[0] <= block.get_end_position_in_frame()[
                     0]) and \
@@ -143,15 +143,15 @@ class Game:
         for _ in range(block.length):
             self.drawer.draw(block)
 
-    def blend(self, frame: numpy.ndarray):
+    def blend(self, frame: ndarray):
         self.drawer.blend(frame)
 
-    def get_drawer_output(self) -> numpy.ndarray:
+    def get_drawer_output(self) -> ndarray:
         return self.drawer.output
 
     def adjust_winning_status(self):
         if len(list(enumerate(
-                filter(lambda block: block.alive, itertools.chain.from_iterable(self.blocks_board.blocks_list))))) == 0:
+                filter(lambda block: block.alive, chain.from_iterable(self.blocks_board.blocks_list))))) == 0:
             self.game_status = True
 
     def toggle_block_visibility(self, block: Block):
