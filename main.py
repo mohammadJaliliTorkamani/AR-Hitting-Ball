@@ -31,8 +31,8 @@ class App(QWidget):
         self.can_detect_hand = False
         self.is_inverted = False
 
-        RepeatedTimer(Constants.HAND_DETECTION_RATE, self.invert_boolean, 1)
-        RepeatedTimer(Constants.INVERSION_RATE, self.invert_boolean, 2)
+        RepeatedTimer(Constants.HAND_DETECTION_RATE, self.invert_can_detect_hand)
+        RepeatedTimer(Constants.INVERSION_RATE, self.invert_is_inverted)
 
         self.thread = VideoThread(Constants.VIDEO_STREAM_ADDRESS)
         self.thread.change_pixmap_signal.connect(self.update_image)
@@ -47,21 +47,22 @@ class App(QWidget):
                 self.game.draw_surface()
 
         self.game.move_ball()
-
         self.game.blend(frame)
+        self.draw_status_text()
+        self.set_frame_within_label(~frame if self.is_inverted else frame)
+
+    def draw_status_text(self):
         cv2.putText(self.game.get_drawer_output(), "Game Status: " +
                     ("Playing" if self.game.game_status is None else (
                         "You win" if self.game.game_status else "You lose")),
                     (int(Constants.SCREEN_WIDTH / 2) - 80, Constants.SCREEN_HEIGHT - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.6,
                     (0, 0, 255) if self.game.game_status else (255, 100, 40), thickness=2)
 
-        self.set_frame_within_label(~frame if self.is_inverted else frame)
+    def invert_can_detect_hand(self):
+        self.can_detect_hand = not self.can_detect_hand
 
-    def invert_boolean(self, arg: int):
-        if arg == 1:
-            self.can_detect_hand = not self.can_detect_hand
-        elif arg == 2:
-            self.is_inverted = not self.is_inverted
+    def invert_is_inverted(self):
+        self.is_inverted = not self.is_inverted
 
     def set_frame_within_label(self, frame: numpy.ndarray):
         qt_img = convert_cv_qt(frame)

@@ -15,10 +15,10 @@ class HandDetector:
 
         if results.multi_hand_landmarks:
             for handLms in results.multi_hand_landmarks:
-                for id, lm in enumerate(handLms.landmark):
-                    h, w, c = frame.shape
-                    cx, cy = int(lm.x * w), int(lm.y * h)
-                    points_status[id] = (cx, cy)
+                for point_id, landmark in enumerate(handLms.landmark):
+                    height, width, _ = frame.shape
+                    cx, cy = int(landmark.x * width), int(landmark.y * height)
+                    points_status[point_id] = (cx, cy)
 
         if 0 in points_status:
             return True, points_status[0]

@@ -31,20 +31,21 @@ class Game:
             self.toggle_block_visibility(self._hidden_block_candidate)
 
         alive_shown_blocks = list(filter(lambda block: block.alive and not block.hidden,
-                                         itertools.chain.from_iterable(self.blocks_board.blocks)))
+                                         itertools.chain.from_iterable(self.blocks_board.blocks_list)))
         self._hidden_block_candidate = alive_shown_blocks[random.randint(0, len(alive_shown_blocks) - 1)]
         self.toggle_block_visibility(self._hidden_block_candidate)
 
     def draw_game_structure(self):
         for block in filter(lambda block: block.alive and not block.hidden,
-                            itertools.chain.from_iterable(self.blocks_board.blocks)):
+                            itertools.chain.from_iterable(self.blocks_board.blocks_list)):
             row, col = block.position_in_board[0], block.position_in_board[1]
             block.current_position = (
                 int(col / (self.blocks_board.size[1] + 1) * self.display_width) - int(block.length / 2),
-                int(0.4 * (row / (self.blocks_board.size[0] + 1)) * self.display_height) + 10)
+                int(Constants.BLOCK_VERTICAL_COEFFICIENT * (row / (
+                        self.blocks_board.size[0] + 1)) * self.display_height) + Constants.BLOCK_VERTICAL_MARGIN)
             self.draw_block(block)
 
-    def detect_gesture(self, frame : numpy.ndarray):
+    def detect_gesture(self, frame: numpy.ndarray):
         visible, position = self.player.detect_gesture(frame)
         if visible and (position[0] + self.surface.length <= self.display_width) and (position[0] >= 0):
             self.player.is_visible = visible
@@ -61,19 +62,20 @@ class Game:
 
     def clear_last_surface(self):
         if self.surface.last_position[0] != -1:  # is True for the first detection
-            [self.drawer.clear((self.surface.last_position[0] + i, self.surface.current_position[1])) for i in
-             range(self.surface.length)]
+            for i in range(self.surface.length):
+                self.drawer.clear((self.surface.last_position[0] + i, self.surface.current_position[1]))
 
     def draw_new_ball(self):
         self.drawer.clear(self.ball.last_position)
         self.drawer.draw(self.ball)
 
-    def clear_block(self, block : Block):
+    def clear_block(self, block: Block):
         for k in range(block.length):
             block_position = int(
                 block.position_in_board[1] / (self.blocks_board.size[1] + 1) * self.display_width) + k - int(
                 block.length / 2), int(
-                0.4 * (block.position_in_board[0] / (self.blocks_board.size[0] + 1)) * self.display_height) + 10
+                Constants.BLOCK_VERTICAL_COEFFICIENT * (block.position_in_board[0] / (
+                        self.blocks_board.size[0] + 1)) * self.display_height) + Constants.BLOCK_VERTICAL_MARGIN
             self.drawer.clear(block_position)
 
     def move_ball(self):
@@ -84,7 +86,7 @@ class Game:
 
         # BLOCK COLLISION STATE CHECK
         for block in filter(lambda block: block.alive and not block.hidden,
-                            itertools.chain.from_iterable(self.blocks_board.blocks)):
+                            itertools.chain.from_iterable(self.blocks_board.blocks_list)):
             if self.ball.is_moving_up:
                 if (block.current_position[0] <= self.ball.current_position[0] <= block.get_end_position_in_frame()[
                     0]) and \
@@ -129,19 +131,19 @@ class Game:
             self.ball.is_moving_up = True
             play_beep()
 
-        new_pos_x = (self.ball.current_position[0] + 5) if self.ball.is_moving_right else (
-                self.ball.current_position[0] - 5)
-        new_pos_y = (self.ball.current_position[1] - 5) if self.ball.is_moving_up \
-            else (self.ball.current_position[1] + 5)
+        new_pos_x = (self.ball.current_position[0] + Constants.BALL_MOVEMENT_STEP) if self.ball.is_moving_right else (
+                self.ball.current_position[0] - Constants.BALL_MOVEMENT_STEP)
+        new_pos_y = (self.ball.current_position[1] - Constants.BALL_MOVEMENT_STEP) if self.ball.is_moving_up \
+            else (self.ball.current_position[1] + Constants.BALL_MOVEMENT_STEP)
 
         self.ball.current_position = (new_pos_x, new_pos_y)
         self.draw_new_ball()
 
-    def draw_block(self, block : Block):
+    def draw_block(self, block: Block):
         for _ in range(block.length):
             self.drawer.draw(block)
 
-    def blend(self, frame : numpy.ndarray):
+    def blend(self, frame: numpy.ndarray):
         self.drawer.blend(frame)
 
     def get_drawer_output(self) -> numpy.ndarray:
@@ -149,10 +151,10 @@ class Game:
 
     def adjust_winning_status(self):
         if len(list(enumerate(
-                filter(lambda block: block.alive, itertools.chain.from_iterable(self.blocks_board.blocks))))) == 0:
+                filter(lambda block: block.alive, itertools.chain.from_iterable(self.blocks_board.blocks_list))))) == 0:
             self.game_status = True
 
-    def toggle_block_visibility(self, block : Block):
+    def toggle_block_visibility(self, block: Block):
         block.hidden = not block.hidden
         if block.hidden:
             self.clear_block(block)

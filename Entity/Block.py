@@ -3,10 +3,9 @@ from Utils import Constants
 
 
 class Block(Drawable):
-    def __init__(self, block_id: int, position_in_board: tuple, color: tuple = (255, 255, 255),
+    def __init__(self, position_in_board: tuple, color: tuple = (255, 255, 255),
                  current_position: tuple = (-1, -1)):
         super().__init__(color, current_position)
-        self.id = block_id
         self.length = Constants.BLOCK_LENGTH
         self.position_in_board = position_in_board
         self.alive = True
