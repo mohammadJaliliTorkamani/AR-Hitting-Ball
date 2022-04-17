@@ -20,5 +20,4 @@ def convert_cv_qt(frame: ndarray, display_width: int = Constants.SCREEN_WIDTH,
     return QPixmap.fromImage(image)
 
 
-def play_beep():
-    sound.play()
+play_beep = lambda : sound.play()
