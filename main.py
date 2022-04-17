@@ -1,7 +1,6 @@
 from sys import argv, exit
 
 import cv2
-import numpy as np
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QWidget, QApplication, QLabel, QVBoxLayout
 from numpy import ndarray
@@ -38,7 +37,7 @@ class App(QWidget):
         self.thread.change_pixmap_signal.connect(self.update_image)
         self.thread.start()
 
-    @pyqtSlot(np.ndarray)
+    @pyqtSlot(ndarray)
     def update_image(self, frame: ndarray):
         if self.can_detect_hand:
             self.game.detect_gesture(frame)
