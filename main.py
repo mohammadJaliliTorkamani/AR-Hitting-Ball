@@ -1,6 +1,7 @@
 import sys
 
 import cv2
+import numpy
 import numpy as np
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtWidgets import QWidget, QApplication, QLabel, QVBoxLayout
@@ -38,7 +39,7 @@ class App(QWidget):
         self.thread.start()
 
     @pyqtSlot(np.ndarray)
-    def update_image(self, frame):
+    def update_image(self, frame: numpy.ndarray):
         if self.can_detect_hand:
             self.game.detect_gesture(frame)
             if self.game.player.is_visible:
@@ -56,13 +57,13 @@ class App(QWidget):
 
         self.set_frame_within_label(~frame if self.is_inverted else frame)
 
-    def invert_boolean(self, arg):
+    def invert_boolean(self, arg: int):
         if arg == 1:
             self.can_detect_hand = not self.can_detect_hand
         elif arg == 2:
             self.is_inverted = not self.is_inverted
 
-    def set_frame_within_label(self, frame):
+    def set_frame_within_label(self, frame: numpy.ndarray):
         qt_img = convert_cv_qt(frame)
         self.image_label.setPixmap(qt_img)
 

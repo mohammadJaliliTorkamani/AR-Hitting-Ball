@@ -8,5 +8,5 @@ from Utils import Constants
 class Surface(Drawable):
     length: int = Constants.SURFACE_LENGTH
 
-    def get_end_x(self):
+    def get_end_x(self) -> int:
         return self.current_position[0] + self.length

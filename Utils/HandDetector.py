@@ -1,12 +1,13 @@
 import cv2
 import mediapipe as mp
+import numpy
 
 
 class HandDetector:
     def __init__(self):
         self._hands = mp.solutions.hands.Hands()
 
-    def detect_gesture(self, frame):
+    def detect_gesture(self, frame: numpy.ndarray) -> (bool, tuple):
         img_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         results = self._hands.process(img_rgb)
         _cx, _cy = -1, -1

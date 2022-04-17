@@ -1,7 +1,10 @@
 import itertools
 import random
 
+import numpy
+
 from Entity.Ball import Ball
+from Entity.Block import Block
 from Entity.Board import Board
 from Entity.Player import Player
 from Entity.Surface import Surface
@@ -16,21 +19,21 @@ class Game:
         (self.display_width, self.display_height) = display_size
         self.blocks_board = Board(blocks_size)
         self.player = Player()
-        self.ball = Ball(Constants.BALL_COLOR)
-        self.surface = Surface(Constants.SURFACE_COLOR, (-1, self.display_height - 100))
+        self.ball = Ball(color=Constants.BALL_COLOR)
+        self.surface = Surface(color=Constants.SURFACE_COLOR, current_position=(-1, self.display_height - 100))
         self.drawer = Drawer()
         self.game_status = None
-        self.hidden_block_candidate = None
+        self._hidden_block_candidate = None
         RepeatedTimer(Constants.BLOCK_HIDE_RATE, self.hide_blocks)
 
     def hide_blocks(self):
-        if self.hidden_block_candidate is not None:
-            self.toggle_block_visibility(self.hidden_block_candidate)
+        if self._hidden_block_candidate is not None:
+            self.toggle_block_visibility(self._hidden_block_candidate)
 
         alive_shown_blocks = list(filter(lambda block: block.alive and not block.hidden,
                                          itertools.chain.from_iterable(self.blocks_board.blocks)))
-        self.hidden_block_candidate = alive_shown_blocks[random.randint(0, len(alive_shown_blocks) - 1)]
-        self.toggle_block_visibility(self.hidden_block_candidate)
+        self._hidden_block_candidate = alive_shown_blocks[random.randint(0, len(alive_shown_blocks) - 1)]
+        self.toggle_block_visibility(self._hidden_block_candidate)
 
     def draw_game_structure(self):
         for block in filter(lambda block: block.alive and not block.hidden,
@@ -41,7 +44,7 @@ class Game:
                 int(0.4 * (row / (self.blocks_board.size[0] + 1)) * self.display_height) + 10)
             self.draw_block(block)
 
-    def detect_gesture(self, frame):
+    def detect_gesture(self, frame : numpy.ndarray):
         visible, position = self.player.detect_gesture(frame)
         if visible and (position[0] + self.surface.length <= self.display_width) and (position[0] >= 0):
             self.player.is_visible = visible
@@ -65,7 +68,7 @@ class Game:
         self.drawer.clear(self.ball.last_position)
         self.drawer.draw(self.ball)
 
-    def clear_block(self, block):
+    def clear_block(self, block : Block):
         for k in range(block.length):
             block_position = int(
                 block.position_in_board[1] / (self.blocks_board.size[1] + 1) * self.display_width) + k - int(
@@ -134,14 +137,14 @@ class Game:
         self.ball.current_position = (new_pos_x, new_pos_y)
         self.draw_new_ball()
 
-    def draw_block(self, block):
+    def draw_block(self, block : Block):
         for _ in range(block.length):
             self.drawer.draw(block)
 
-    def blend(self, frame):
+    def blend(self, frame : numpy.ndarray):
         self.drawer.blend(frame)
 
-    def get_drawer_output(self):
+    def get_drawer_output(self) -> numpy.ndarray:
         return self.drawer.output
 
     def adjust_winning_status(self):
@@ -149,7 +152,7 @@ class Game:
                 filter(lambda block: block.alive, itertools.chain.from_iterable(self.blocks_board.blocks))))) == 0:
             self.game_status = True
 
-    def toggle_block_visibility(self, block):
+    def toggle_block_visibility(self, block : Block):
         block.hidden = not block.hidden
         if block.hidden:
             self.clear_block(block)
