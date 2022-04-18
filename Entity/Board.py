@@ -1,4 +1,4 @@
-import random
+from random import choice
 
 from Entity.Block import Block
 from Utils import Constants
@@ -14,6 +14,7 @@ class Board:
         for i in range(self.size[0]):
             row = []
             for j in range(self.size[1]):
-                block_color = Constants.BLOCK_COLORS[random.randint(0, len(Constants.BLOCK_COLORS) - 1)]
-                row.append(Block(position_in_board=(i + 1, j + 1), color=block_color))
+                block = Block(position_in_board=(i + 1, j + 1))
+                block.color = choice(Constants.BLOCK_COLORS)
+                row.append(block)
             self.blocks_list.append(row)

@@ -15,9 +15,7 @@ class Drawer:
     def draw(self, drawable: Drawable):
         if (isinstance(drawable, Surface)) or (isinstance(drawable, Block)):
             for i in range(drawable.length):
-                self._mask[
-                    (drawable.current_position[0] + i, drawable.current_position[1])
-                ] = drawable.color
+                self._mask[(drawable.current_position[0] + i, drawable.current_position[1])] = drawable.color
         else:
             self._mask[drawable.current_position] = drawable.color
 
