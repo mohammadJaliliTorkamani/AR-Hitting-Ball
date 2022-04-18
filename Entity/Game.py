@@ -24,7 +24,7 @@ class Game:
         self.surface = Surface(visible=False, color=Constants.SURFACE_COLOR,
                                current_position=(-1, self.display_height - Constants.SURFACE_BOTTOM_MARGIN))
         self.drawer = Drawer()
-        self.game_status = None
+        self.is_winner = None
         self._hidden_block_candidate = None
         RepeatedTimer(Constants.BLOCK_HIDE_RATE, self.hide_blocks)
         self.can_detect_hand = False
@@ -58,9 +58,9 @@ class Game:
 
     def draw_status_text(self):
         cv2.putText(self.get_drawer_output(), "Game Status: " +
-                    ("Playing" if self.game_status is None else ("You win" if self.game_status else "You lose")),
+                    ("Playing" if self.is_winner is None else ("You win" if self.is_winner else "You lose")),
                     (int(Constants.SCREEN_WIDTH / 2) - 80, Constants.SCREEN_HEIGHT - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.6,
-                    (0, 0, 255) if self.game_status else (255, 100, 40), thickness=2)
+                    (0, 0, 255) if self.is_winner else (255, 100, 40), thickness=2)
 
     def detect_gesture(self, frame: ndarray):
         visible, position = self.player.detect_gesture(frame)
@@ -103,44 +103,40 @@ class Game:
 
         self.ball.last_position = self.ball.current_position
 
-        # BLOCK COLLISION STATE CHECK
         for block in filter(lambda block: block.alive and block.visible,
                             chain.from_iterable(self.blocks_board.blocks_list)):
-            if self.ball.hit_block(block):
+            if self.ball.is_hit_block(block):
                 block.alive = False
                 self.clear_block(block)
-                self.ball.is_moving_up = not self.ball.is_moving_up
+                self.ball.toggle_moving_up()
                 play_beep()
                 self.adjust_winning_status()
 
-        # HORIZONTAL COLLISION CHECK
-        if (self.ball.current_position[0] >= self.display_width) or (self.ball.current_position[0] <= 0):
-            self.ball.is_moving_right = not self.ball.is_moving_right
+        if not self.ball.is_horizontally_aligned(self.display_width):
+            self.ball.toggle_moving_right()
             play_beep()
 
-        # VERTICAL (TOP SIDE) COLLISION CHECK
-        elif self.ball.current_position[1] <= 0:
+        elif not self.ball.is_vertically_in_range(self.display_height):
+            self.is_winner = False
+            self.ball.visible = False
+            self.drawer.clear(self.ball.current_position)
+
+        elif not self.ball.is_vertically_top_aligned():
             self.ball.is_moving_up = False
             play_beep()
 
-        # VERTICAL (BOTTOM SIDE) COLLISION CHECK
-        elif self.ball.current_position[1] >= self.display_height:
-            self.game_status = False
-            play_beep()
-
-        elif ((self.surface.current_position[0] <= self.ball.current_position[0] <= self.surface.get_end_x())
-              and ((self.ball.current_position[1] + Constants.PIXEL_DIMENSION) >=
-                   self.surface.current_position[1] - Constants.PIXEL_DIMENSION)):
+        elif self.ball.is_hit_surface(self.surface):
             self.ball.is_moving_up = True
             play_beep()
 
-        new_pos_x = (self.ball.current_position[0] + Constants.BALL_MOVEMENT_STEP) if self.ball.is_moving_right else (
-                self.ball.current_position[0] - Constants.BALL_MOVEMENT_STEP)
-        new_pos_y = (self.ball.current_position[1] - Constants.BALL_MOVEMENT_STEP) if self.ball.is_moving_up \
-            else (self.ball.current_position[1] + Constants.BALL_MOVEMENT_STEP)
+        if self.ball.visible:
+            new_pos_x = (self.ball.current_position[0] + Constants.BALL_MOVEMENT_STEP) \
+                if self.ball.is_moving_right else (self.ball.current_position[0] - Constants.BALL_MOVEMENT_STEP)
+            new_pos_y = (self.ball.current_position[1] - Constants.BALL_MOVEMENT_STEP) if self.ball.is_moving_up \
+                else (self.ball.current_position[1] + Constants.BALL_MOVEMENT_STEP)
 
-        self.ball.current_position = (new_pos_x, new_pos_y)
-        self.draw_new_ball()
+            self.ball.current_position = (new_pos_x, new_pos_y)
+            self.draw_new_ball()
 
     def draw_block(self, block: Block):
         row, col = block.position_in_board[0], block.position_in_board[1]
@@ -160,7 +156,7 @@ class Game:
 
     def adjust_winning_status(self):
         if not list(enumerate(filter(lambda block: block.alive, chain.from_iterable(self.blocks_board.blocks_list)))):
-            self.game_status = True
+            self.is_winner = True
             self.ball.visible = False
 
     def toggle_block_visibility(self, block: Block):
@@ -172,5 +168,8 @@ class Game:
     def draw_surface(self):
         self.drawer.draw(self.surface)
 
-    def is_visible_player(self):
+    def is_visible_player(self) -> bool:
         return self.player.is_visible
+
+    def is_playing(self) -> bool:
+        return self.is_winner is None

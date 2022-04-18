@@ -31,7 +31,7 @@ class App(QWidget):
 
     @pyqtSlot(ndarray)
     def update_image(self, frame: ndarray):
-        if self.game.can_detect_hands():
+        if self.game.is_playing() and self.game.can_detect_hands():
             self.game.detect_gesture(frame)
             if self.game.is_visible_player():
                 self.game.redraw_surface()
