@@ -18,7 +18,7 @@ class VideoThread(QThread):
         self.display_height = display_height
 
     def run(self):
-        cap = cv2.VideoCapture(self.port)
+        cap = cv2.VideoCapture(self.port, cv2.CAP_V4L2)
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.display_width)
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.display_height)
 
